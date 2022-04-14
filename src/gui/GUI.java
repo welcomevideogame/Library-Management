@@ -160,7 +160,6 @@ public class GUI implements ActionListener {
         searchMasterPanel.setBackground(menuBlue);
         searchMasterPanel.add(search1Box);
         searchMasterPanel.add(search2Box);
-
     }
 
     public void buildEmployee() {

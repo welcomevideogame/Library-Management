@@ -17,7 +17,6 @@ public class employeeData {
     String employed;
     String amountSpent;
 
-
     public employeeData(String value,String value1, String value2, String value3,String value4,String value5,String value6,String value7,String value8, String value10,String value11) {
         name = value;
         department = value1;
