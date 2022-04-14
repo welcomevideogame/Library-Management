@@ -312,22 +312,31 @@ public class GUI implements ActionListener {
 
         addEmpHeadings();
 
+        ArrayList<JButton> tempButtons = new ArrayList<>();
         for (var entry : read.employee.employeeT.entrySet()) {
+            String currentKey = entry.getKey();
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
+            tempButtons.add(idButton);
             employeeMasterPanel.add(idButton);
             for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
                     empButton = new JButton(empAtt.get(i));
+                    tempButtons.add(empButton);
                     if (i == permissionIndex) {
+                        empButton.addActionListener(superActionListener(i, currentKey));
                     }
                 }
                 else{
                     empButton = new JButton(empAtt.get(i + 1));
+                    tempButtons.add(empButton);
+                    empButton.addActionListener(superActionListener(i, currentKey));
                 }
                 employeeMasterPanel.add(empButton);
             }
+            empButtons.add((ArrayList<JButton>) tempButtons.clone());
+            tempButtons.clear();
             currentRow++;
         }
     }
@@ -356,6 +365,7 @@ public class GUI implements ActionListener {
         HashMap<String, employeeData> filteredData = new HashMap<>();
 
         addEmpHeadings();
+        ArrayList<JButton> tempButtons = new ArrayList<>();
 
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
@@ -382,22 +392,29 @@ public class GUI implements ActionListener {
         employeeMasterPanel.setLayout(layout);
 
         for (var entry : filteredData.entrySet()) {
+            String currentKey = entry.getKey();
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
+            tempButtons.add(idButton);
             employeeMasterPanel.add(idButton);
             for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
                     empButton = new JButton(empAtt.get(i));
+                    tempButtons.add(empButton);
                     if (i == permissionIndex) {
-
+                       empButton.addActionListener(superActionListener(i, currentKey));
                     }
                 }
                 else{
                     empButton = new JButton(empAtt.get(i + 1));
+                    tempButtons.add(empButton);
+                    empButton.addActionListener(superActionListener(i, currentKey));
                 }
                 employeeMasterPanel.add(empButton);
             }
+            empButtons.add((ArrayList<JButton>) tempButtons.clone());
+            tempButtons.clear();
             currentRow++;
         }
     }
