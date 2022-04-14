@@ -80,6 +80,9 @@ public class GUI implements ActionListener {
     public GUI(WriteData write, ReadFile read){
         this.write = write;
         this.read = read;
+        for (var entry : read.employee.employeeT.entrySet()) {
+            entry.getValue().flipBudgets();
+        }
         buildGUI();
     }
 

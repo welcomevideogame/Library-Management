@@ -35,9 +35,17 @@ public class employeeData {
 
     public ArrayList<String> getData(){
         ArrayList<String> a = new ArrayList<>();
-        Collections.addAll(a, name, department, bossID, project, subject, requestedMaterials, allocatedBudget,amountSpent,
+        Collections.addAll(a, name, department, bossID, project, subject, requestedMaterials, allocatedBudget, amountSpent,
                 permisisonLevel, password, employed);
         return a;
+    }
+
+    public void flipBudgets(){
+        String a = String.valueOf(allocatedBudget);
+        String b = String.valueOf(amountSpent);
+        amountSpent = a;
+        allocatedBudget = b;
+
     }
 
     public void updateRank(int rank){
