@@ -71,6 +71,8 @@ public class GUI implements ActionListener {
     private int currentUser = 0;
     private int currentRank = 0;
     private ArrayList<String> empAtt = new ArrayList<>();
+    private String[] headings = {"ID", "Name", "Department", "Boss ID", "Project", "Subject", "Req. Materials",
+                                 "Alloc. Budget", "Spent Budget", "Perm. Level", "Employed"};
 
     // index values
     private int permissionIndex = 8;
@@ -171,7 +173,7 @@ public class GUI implements ActionListener {
 
         int rows = read.employee.employeeT.size() ;
 
-        GridLayout layout = new GridLayout(rows, 8);
+        GridLayout layout = new GridLayout(rows + 1, 12);
         layout.setHgap(hGap);
         layout.setVgap(vGap);
 
@@ -179,6 +181,8 @@ public class GUI implements ActionListener {
         int currentRow = 0;
 
         //------------------------------------------------------------------- action listeners
+        addEmpHeadings();
+
         ArrayList<JButton> tempButtons = new ArrayList<>();
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
@@ -196,7 +200,7 @@ public class GUI implements ActionListener {
             }
             JButton idButton = new JButton(entry.getKey());
             tempButtons.add(idButton);
-            employeeMasterPanel.add(idButton, currentRow, 0);
+            employeeMasterPanel.add(idButton);
             for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
@@ -210,13 +214,12 @@ public class GUI implements ActionListener {
                     empButton = new JButton(empAtt.get(i + 1));
                     tempButtons.add(empButton);
                 }
-                employeeMasterPanel.add(empButton, currentRow, i + 1);
+                employeeMasterPanel.add(empButton);
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
             currentRow++;
         }
-
         populateComboBox();
     }
 
@@ -297,15 +300,17 @@ public class GUI implements ActionListener {
         employeeMasterPanel.revalidate();
         employeeMasterPanel.repaint();
 
-        GridLayout layout = new GridLayout(read.employee.employeeT.size(), 10);
+        GridLayout layout = new GridLayout(read.employee.employeeT.size() + 1, 10);
         layout.setHgap(hGap);
         layout.setVgap(vGap);
         employeeMasterPanel.setLayout(layout);
 
+        addEmpHeadings();
+
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
-            employeeMasterPanel.add(idButton, currentRow, 0);
+            employeeMasterPanel.add(idButton);
             for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
@@ -316,9 +321,18 @@ public class GUI implements ActionListener {
                 else{
                     empButton = new JButton(empAtt.get(i + 1));
                 }
-                employeeMasterPanel.add(empButton, currentRow, i);
+                employeeMasterPanel.add(empButton);
             }
             currentRow++;
+        }
+    }
+
+    private void addEmpHeadings(){
+        Color headingColor = new Color(150,205,225);
+        for(int i = 0; i != headings.length; i++){
+            JButton headingButton = new JButton(headings[i]);
+            headingButton.setBackground(headingColor);
+            employeeMasterPanel.add(headingButton);
         }
     }
     private void updateButtons(String filter, String category){
@@ -335,6 +349,8 @@ public class GUI implements ActionListener {
         employeeMasterPanel.repaint();
 
         HashMap<String, employeeData> filteredData = new HashMap<>();
+
+        addEmpHeadings();
 
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
@@ -355,7 +371,7 @@ public class GUI implements ActionListener {
             }
         }
 
-        GridLayout layout = new GridLayout(filteredData.size(), 10);
+        GridLayout layout = new GridLayout(filteredData.size() + 1, 10);
         layout.setHgap(hGap);
         layout.setVgap(vGap);
         employeeMasterPanel.setLayout(layout);
@@ -363,7 +379,7 @@ public class GUI implements ActionListener {
         for (var entry : filteredData.entrySet()) {
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
-            employeeMasterPanel.add(idButton, currentRow, 0);
+            employeeMasterPanel.add(idButton);
             for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
@@ -375,7 +391,7 @@ public class GUI implements ActionListener {
                 else{
                     empButton = new JButton(empAtt.get(i + 1));
                 }
-                employeeMasterPanel.add(empButton, currentRow, i);
+                employeeMasterPanel.add(empButton);
             }
             currentRow++;
         }
@@ -390,7 +406,6 @@ public class GUI implements ActionListener {
                 boolean outRank = checkOutrank(key);
                 boolean user = String.valueOf(currentUser).equals(key);
 
-                System.out.println(outRank);
                 if (outRank || user){
                     JOptionPane optionPane;
                     if(outRank) {
@@ -505,7 +520,6 @@ public class GUI implements ActionListener {
                 e.printStackTrace();
 
             }
-            System.out.println(i);
             changeScreen(i);
         }
     }
@@ -564,7 +578,6 @@ public class GUI implements ActionListener {
         for (int i = 0; i != splashButtons.size(); i++) {
             splashButtons.get(i).setVisible(false);
         }
-        System.out.println(index);
         for (int i = 0; i != splashButtons.size(); i++){
             if (index.contains(i)){
                 splashButtons.get(i).setVisible(true);

@@ -5,8 +5,8 @@ Digital Collection
 project 4
 biology
 blackstone
-400
 800
+400
 3
 Password
 Yes
@@ -17,8 +17,8 @@ Adult Maintenance
 project 5
 geology
 pink wool
-300
 700
+300
 3
 Password
 Yes
@@ -29,8 +29,8 @@ Digital Collection
 project 4
 biology
 blackstone
-300
 800
+300
 3
 Password
 Yes
@@ -41,8 +41,8 @@ Circulation
 project 3
 geography
 iron ingot
-700
 1,500
+700
 3
 Password
 Yes
@@ -53,8 +53,8 @@ Admin
 project 2
 computers
 redstone
-500
 1,000
+500
 4
 Password
 Yes
@@ -65,8 +65,8 @@ Head Librarian
 project 1
 math
 diamond
-5,600
 10,200
+5,600
 4
 Password
 Yes
@@ -77,8 +77,8 @@ Admin
 project 4
 computer science
 jungle fence
-700
 650
+700
 5
 Password
 Yes
