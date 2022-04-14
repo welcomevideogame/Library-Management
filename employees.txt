@@ -7,19 +7,19 @@ biology
 blackstone
 400
 800
-2
+3
 Password
 Yes
 5
 Joe Sharp
-Adult Maintenance aka Diaper Duty
+Adult Maintenance
 1
 project 5
 geology
 pink wool
 300
 700
-2
+3
 Password
 Yes
 4
@@ -31,7 +31,7 @@ biology
 blackstone
 300
 800
-2
+3
 Password
 Yes
 3

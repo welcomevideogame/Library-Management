@@ -13,9 +13,9 @@ public class Main {
 
         read.readEmployeeFile();
         read.readMediaFile();
-        GUI gui = new GUI(right, read);;
-        right.writeMed(read.Media.mediaT);
-        right.writeEmp(read.employee.employeeT);
+        GUI gui = new GUI(right, read);
+
+        right.writeMed(read.Media.mediaT); // will move this to GUI soon
 
 
     }

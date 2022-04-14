@@ -31,10 +31,6 @@ public class employeeData {
         password = value8;
         employed = value10;
 
-        System.out.println("Name: " + name + "\nDepartment: " + department + "\nBossID: " + bossID
-        + "\nProject: " + project + "\nSubject: " + subject + "\nRequestedMaterials: " + requestedMaterials
-        + "\nAllocatedBudget: " + allocatedBudget + "\nAmountSpent: " + amountSpent
-        + "\nPermissionLevel: " + permisisonLevel + "\nPassword: " + password + "\nEmployed: " + employed);
     }
 
     public ArrayList<String> getData(){
@@ -42,5 +38,9 @@ public class employeeData {
         Collections.addAll(a, name, department, bossID, project, subject, requestedMaterials, allocatedBudget,amountSpent,
                 permisisonLevel, password, employed);
         return a;
+    }
+
+    public void updateRank(int rank){
+        permisisonLevel = String.valueOf(rank); // why is it spelled like "permision"
     }
 }

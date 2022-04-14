@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
@@ -70,6 +72,9 @@ public class GUI implements ActionListener {
     private int currentRank = 0;
     private ArrayList<String> empAtt = new ArrayList<>();
 
+    // index values
+    private int permissionIndex = 8;
+
     public GUI(WriteData write, ReadFile read){
         this.write = write;
         this.read = read;
@@ -85,6 +90,9 @@ public class GUI implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        frame.addWindowListener(onClose());
+
         buildMainPanel();
         buildLogin();
         buildSplash();
@@ -92,6 +100,16 @@ public class GUI implements ActionListener {
         buildEmployee();
         buildMedia();
         Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPatrons, splashVendors);
+    }
+
+    private WindowAdapter onClose(){
+        return new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowOpened(e);
+                WriteData.writeEmp(read.employee.employeeT);
+            }
+        };
     }
 
     public void buildLogin() {
@@ -142,7 +160,6 @@ public class GUI implements ActionListener {
     public void buildEmployee() {
 
         int passwordIndex = 9;
-        int permissionIndex = 8;
 
         int hGap = 25;
         int vGap = 25;
@@ -162,12 +179,6 @@ public class GUI implements ActionListener {
         int currentRow = 0;
 
         //------------------------------------------------------------------- action listeners
-        ActionListener empAL = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //
-            }
-        };
         ArrayList<JButton> tempButtons = new ArrayList<>();
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
@@ -186,7 +197,7 @@ public class GUI implements ActionListener {
             JButton idButton = new JButton(entry.getKey());
             tempButtons.add(idButton);
             employeeMasterPanel.add(idButton, currentRow, 0);
-            for (int i = 1; i != empAtt.size() - 1; i++){
+            for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
                     empButton = new JButton(empAtt.get(i));
@@ -199,15 +210,13 @@ public class GUI implements ActionListener {
                     empButton = new JButton(empAtt.get(i + 1));
                     tempButtons.add(empButton);
                 }
-                employeeMasterPanel.add(empButton, currentRow, i);
+                employeeMasterPanel.add(empButton, currentRow, i + 1);
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
             currentRow++;
         }
-        System.out.println(filterDepartment);
-        System.out.println(filterProject);
-        System.out.println(filterSubject);
+
         populateComboBox();
     }
 
@@ -282,7 +291,6 @@ public class GUI implements ActionListener {
         int hGap = 25;
         int vGap = 25;
         int passwordIndex = 9;
-        int permissionIndex = 8;
         int currentRow = 0;
 
         employeeMasterPanel.removeAll();
@@ -298,7 +306,7 @@ public class GUI implements ActionListener {
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
             employeeMasterPanel.add(idButton, currentRow, 0);
-            for (int i = 1; i != empAtt.size() - 1; i++){
+            for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
                     empButton = new JButton(empAtt.get(i));
@@ -320,7 +328,6 @@ public class GUI implements ActionListener {
         int hGap = 25;
         int vGap = 25;
         int passwordIndex = 9;
-        int permissionIndex = 8;
         int currentRow = 0;
 
         employeeMasterPanel.removeAll();
@@ -357,7 +364,7 @@ public class GUI implements ActionListener {
             empAtt = entry.getValue().getData();
             JButton idButton = new JButton(entry.getKey());
             employeeMasterPanel.add(idButton, currentRow, 0);
-            for (int i = 1; i != empAtt.size() - 1; i++){
+            for (int i = 0; i != empAtt.size() - 1; i++){
                 JButton empButton;
                 if(i != passwordIndex) {
                     empButton = new JButton(empAtt.get(i));
@@ -375,14 +382,80 @@ public class GUI implements ActionListener {
     }
 
     private ActionListener superActionListener(int index, String key){
-        int permissionIndex = 8;
+
         if (index == permissionIndex){
-            ActionListener permission = e -> {
-                System.out.println(key);
+            return e -> {
+
+                boolean valid = false;
+                boolean outRank = checkOutrank(key);
+                boolean user = String.valueOf(currentUser).equals(key);
+
+                System.out.println(outRank);
+                if (outRank || user){
+                    JOptionPane optionPane;
+                    if(outRank) {
+                        optionPane = new JOptionPane("Not enough permissions ", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else{
+                        optionPane = new JOptionPane("Cannot change your own rank ", JOptionPane.ERROR_MESSAGE);
+                    }
+                    JDialog dialog = optionPane.createDialog("Self");
+                    dialog.setVisible(true);
+                }
+
+                else {
+                    do {
+                        String newRank = JOptionPane.showInputDialog("What will their new rank be?");
+                        try {
+
+                            if (newRank != null) {
+                                int a = Integer.parseInt(newRank);
+                                if (a > currentRank || a < 1) {
+                                    JOptionPane optionPane = new JOptionPane("Rank must be between 1 and "
+                                            + currentRank, JOptionPane.ERROR_MESSAGE);
+                                    JDialog dialog = optionPane.createDialog("Out of range");
+                                    dialog.setVisible(true);
+                                } else {
+                                    valid = true;
+                                    changeRank(key, a);
+                                }
+                            } else {
+                                valid = true;
+                            }
+
+                        } catch (NumberFormatException err) {
+                            JOptionPane optionPane = new JOptionPane("Invalid number", JOptionPane.ERROR_MESSAGE);
+                            JDialog dialog = optionPane.createDialog("Bad input");
+                            dialog.setVisible(true);
+                        }
+
+                    } while (!valid);
+                }
             };
-            return permission;
         }
         return null;
+    }
+
+    private boolean checkOutrank(String key){
+        return(currentRank <= Integer.parseInt(read.employee.employeeT.get(key).getData().get(permissionIndex)));
+    }
+
+    private void changeRank(String key, int newRank){
+        int permIndex = 9; // must make new one since arraylist is 9
+        employeeData user = read.employee.employeeT.get(key);
+        try {
+            user.updateRank(newRank);
+            for(int i = 0; i != empButtons.size(); i++){
+                if(empButtons.get(i).get(0).getText().equals(key)){ // should have used a hashmap
+                    empButtons.get(i).get(permIndex).setText(String.valueOf(newRank));
+                }
+            }
+        }
+        catch(NullPointerException e){
+            JOptionPane optionPane = new JOptionPane("Could not change rank", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Error");
+            dialog.setVisible(true);
+        }
     }
 
     public void buildMedia(){
@@ -450,6 +523,7 @@ public class GUI implements ActionListener {
         if (valid){
             // get rank
             currentRank = 5; // test
+            currentUser = 2; // test
             setButtons();
             changeScreen(2);
         }
