@@ -40,6 +40,14 @@ public class employeeData {
         return a;
     }
 
+    public String getEmployment(){
+        return employed;
+    }
+
+    public void setEmployment(String state){
+        employed = state;
+    }
+
     public void flipBudgets(){
         String a = String.valueOf(allocatedBudget);
         String b = String.valueOf(amountSpent);

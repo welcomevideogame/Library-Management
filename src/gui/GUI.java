@@ -76,6 +76,7 @@ public class GUI implements ActionListener {
 
     // index values
     private int permissionIndex = 8;
+    private int employedIndex = 9;
 
     public GUI(WriteData write, ReadFile read){
         this.write = write;
@@ -216,6 +217,7 @@ public class GUI implements ActionListener {
                 else{
                     empButton = new JButton(empAtt.get(i + 1));
                     tempButtons.add(empButton);
+                    empButton.addActionListener(superActionListener(i, currentKey));
                 }
                 employeeMasterPanel.add(empButton);
             }
@@ -401,7 +403,6 @@ public class GUI implements ActionListener {
     }
 
     private ActionListener superActionListener(int index, String key){
-
         if (index == permissionIndex){
             return e -> {
 
@@ -411,13 +412,15 @@ public class GUI implements ActionListener {
 
                 if (outRank || user){
                     JOptionPane optionPane;
+                    JDialog dialog;
                     if(outRank) {
                         optionPane = new JOptionPane("Not enough permissions ", JOptionPane.ERROR_MESSAGE);
+                        dialog = optionPane.createDialog("Permissions");
                     }
                     else{
                         optionPane = new JOptionPane("Cannot change your own rank ", JOptionPane.ERROR_MESSAGE);
+                        dialog = optionPane.createDialog("Self");
                     }
-                    JDialog dialog = optionPane.createDialog("Self");
                     dialog.setVisible(true);
                 }
 
@@ -451,11 +454,61 @@ public class GUI implements ActionListener {
                 }
             };
         }
+        else if(index == employedIndex){
+            return e -> {
+                boolean outRank = checkOutrank(key);
+                boolean user = String.valueOf(currentUser).equals(key);
+
+                if (outRank || user){
+                    JOptionPane optionPane;
+                    JDialog dialog;
+                    if(outRank) {
+                        optionPane = new JOptionPane("Not enough permissions ", JOptionPane.ERROR_MESSAGE);
+                        dialog = optionPane.createDialog("Permissions");
+                    }
+                    else{
+                        optionPane = new JOptionPane("Cannot edit yourself ", JOptionPane.ERROR_MESSAGE);
+                        dialog = optionPane.createDialog("Self");
+                    }
+                    dialog.setVisible(true);
+                }
+                else{
+                    changeEmployment(key);
+                }
+            };
+        }
         return null;
     }
 
     private boolean checkOutrank(String key){
         return(currentRank <= Integer.parseInt(read.employee.employeeT.get(key).getData().get(permissionIndex)));
+    }
+
+    private void changeEmployment(String key){
+        String newState = "";
+        int empIndex = 10;
+
+        employeeData emp = read.employee.employeeT.get(key);
+        if(emp.getEmployment().equals("Yes")){
+            emp.setEmployment("No");
+            newState = "No";
+        }
+        else if(emp.getEmployment().equals("No")){
+            emp.setEmployment("Yes");
+            newState = "Yes";
+        }
+        else{
+            JOptionPane optionPane = new JOptionPane("Failed to change employment ", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Self");
+            dialog.setVisible(true);
+        }
+        if(!newState.isBlank()){
+            for(int i = 0; i != empButtons.size(); i++) {
+                if (empButtons.get(i).get(0).getText().equals(key)) { // should have used a hashmap
+                    empButtons.get(i).get(empIndex).setText(newState);
+                }
+            }
+        }
     }
 
     private void changeRank(String key, int newRank){
