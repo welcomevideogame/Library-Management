@@ -1,0 +1,84 @@
+6
+Cletus McFetus
+Digital Collection
+4
+project 4
+biology
+blackstone
+400
+800
+2
+Password
+Yes
+5
+Joe Sharp
+Adult Maintenance aka Diaper Duty
+1
+project 5
+geology
+pink wool
+300
+700
+2
+Password
+Yes
+4
+Aidan May
+Digital Collection
+1
+project 4
+biology
+blackstone
+300
+800
+2
+Password
+Yes
+3
+Thomas Lewis
+Circulation
+1
+project 3
+geography
+iron ingot
+700
+1,500
+3
+Password
+Yes
+2
+Louie Lane
+Admin
+1
+project 2
+computers
+redstone
+500
+1,000
+4
+Password
+Yes
+1
+Aiden Wilkinson
+Head Librarian
+1
+project 1
+math
+diamond
+5,600
+10,200
+4
+Password
+Yes
+7
+Morgan Well
+Admin
+5
+project 4
+computer science
+jungle fence
+700
+650
+5
+Password
+Yes
