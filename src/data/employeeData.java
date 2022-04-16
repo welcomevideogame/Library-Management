@@ -43,6 +43,14 @@ public class employeeData {
         return employed;
     }
 
+    public String getPassword(){
+        return password;
+    }
+
+    public String getPermissisonLevel(){
+        return permisisonLevel;
+    }
+
     public void setEmployment(String state){
         employed = state;
     }
@@ -52,7 +60,6 @@ public class employeeData {
         String b = String.valueOf(amountSpent);
         amountSpent = a;
         allocatedBudget = b;
-
     }
 
     public void updateRank(int rank){

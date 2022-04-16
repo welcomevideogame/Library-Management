@@ -68,8 +68,8 @@ public class GUI implements ActionListener {
     public JPanel employeeSuperMasterPanel = new JPanel();
 
     // gui attributes
-    private int currentUser = 0;
-    private int currentRank = 0;
+    private int currentUser = 1;
+    private int currentRank = 1;
     private ArrayList<String> empAtt = new ArrayList<>();
     private String[] headings = {"ID", "Name", "Department", "Boss ID", "Project", "Subject", "Req. Materials",
                                  "Alloc. Budget", "Spent Budget", "Perm. Level", "Employed"};
@@ -149,6 +149,12 @@ public class GUI implements ActionListener {
         splashMedia.addActionListener(this);
         splashSecondaryPanel.add(splashEmployees);
         splashEmployees.addActionListener(this);
+
+        splashEmployees.setVisible(false);
+        splashVendors.setVisible(false);
+        splashPatrons.setVisible(false);
+        splashDatabases.setVisible(false);
+
         splashSecondaryPanel.add(splashPatrons);
         splashSecondaryPanel.add(splashVendors);
         splashSecondaryPanel.add(splashDatabases);
@@ -598,22 +604,36 @@ public class GUI implements ActionListener {
 
     public void logIn(){
         boolean valid = false;
+        boolean empty = false;
 
         String user = loginUsernameField.getText();
         String password = loginPasswordField.getText();
 
-        //valid = read.employee.login(user, password);
-        valid = true;
-
-        // check user and password
-        if (valid){
-            // get rank
-            currentRank = 5; // test
-            currentUser = 2; // test
-            setButtons();
-            changeScreen(2);
+        try {
+            valid = read.employee.login(user, password);
         }
-        else{
+
+        catch(NullPointerException e){
+            JOptionPane optionPane = new JOptionPane("Could not log in", JOptionPane.ERROR_MESSAGE);
+            JDialog dialog = optionPane.createDialog("Database error");
+            dialog.setVisible(true);
+            empty = true;
+        }
+
+        if (valid){
+            try{
+                currentUser = Integer.parseInt(user);
+                currentRank = Integer.parseInt(read.employee.employeeT.get(user).getPermissisonLevel());
+                setButtons();
+                changeScreen(2);
+            }
+            catch (NumberFormatException e){
+                JOptionPane optionPane = new JOptionPane("Could not log in", JOptionPane.ERROR_MESSAGE);
+                JDialog dialog = optionPane.createDialog("Database error");
+                dialog.setVisible(true);
+            }
+        }
+        else if (!empty){
             JOptionPane optionPane = new JOptionPane("Invalid Login", JOptionPane.ERROR_MESSAGE);
             JDialog dialog = optionPane.createDialog("Error");
             dialog.setVisible(true);

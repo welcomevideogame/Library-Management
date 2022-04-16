@@ -79,26 +79,7 @@ public class  Employee {
     }
 
     public boolean login(String user, String password) {
-        String checkID,checkPassword, controlT;
-        int control = 1;
-        checkPassword = password;
-        while(control <= employeeT.size()) {
-            checkID = employeeT.get(control).name;
-            if (checkID.equals(user)) {
-                break;
-            }
-            else {
-                control++;
-            }
-        }
-        controlT = String.valueOf(control);
-        if (checkPassword.equals(employeeT.get(controlT).password)) {
-            loginResult = employeeT.get(controlT).permisisonLevel;
-            return true;
-        }
-        else {
-            return false;
-        }
+        return employeeT.get(user).getPassword().equals(password);
     }
 
     public String getPassword() {
