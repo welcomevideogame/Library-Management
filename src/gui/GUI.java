@@ -20,63 +20,62 @@ import data.*;
 public class GUI implements ActionListener {
 
     // objects used in all GUIs
-    public JFrame frame = new JFrame();
-    private CardLayout cl = new CardLayout(0, 0);// objects used in MenuGUI
-    public JPanel mainMasterPanel = new JPanel();
-    public JLabel libraryName = new JLabel("Stonybrook Library");
-    public Color menuBlue = new Color(173, 216, 230);
+    private final JFrame frame = new JFrame();
+    private final CardLayout cl = new CardLayout(0, 0);// objects used in MenuGUI
+    private final JPanel mainMasterPanel = new JPanel();
+    private final JLabel libraryName = new JLabel("Stonybrook Library");
+    private final Color menuBlue = new Color(173, 216, 230);
 
     // objects used in LoginGUI
-    public JPanel loginMasterPanel = new JPanel();
-    public JPanel loginSecondaryPanel = new JPanel();
-    public JLabel loginUsernameLabel = new JLabel("Username");
-    public JLabel loginPasswordLabel = new JLabel("Password");
-    public JTextField loginUsernameField = new JTextField();
-    public JTextField loginPasswordField = new JTextField();
-    public JButton loginSubmit = new JButton("SUBMIT");
-    public JButton loginGuestLogin = new JButton("CONTINUE AS GUEST");
-    public JButton loginQuit = new JButton("QUIT");
+    private final JPanel loginMasterPanel = new JPanel();
+    private final JPanel loginSecondaryPanel = new JPanel();
+    private final JLabel loginUsernameLabel = new JLabel("Username");
+    private final JLabel loginPasswordLabel = new JLabel("Password");
+    private final JTextField loginUsernameField = new JTextField();
+    private final JTextField loginPasswordField = new JTextField();
+    private final JButton loginSubmit = new JButton("SUBMIT");
+    private final JButton loginGuestLogin = new JButton("CONTINUE AS GUEST");
+    private final JButton loginQuit = new JButton("QUIT");
 
     // objects used in SplashGUI
-    public JPanel splashMasterPanel = new JPanel();
-    public JPanel splashSecondaryPanel = new JPanel();
-    public JButton splashMedia = new JButton("MEDIA");
-    public JButton splashEmployees = new JButton("EMPLOYEES");
-    public JButton splashDatabases = new JButton("DATABASES");
-    public JButton splashPatrons = new JButton("PATRONS");
-    public JButton splashVendors = new JButton("VENDORS");
+    private final JPanel splashMasterPanel = new JPanel();
+    private final JPanel splashSecondaryPanel = new JPanel();
+    private final JButton splashMedia = new JButton("MEDIA");
+    private final JButton splashEmployees = new JButton("EMPLOYEES");
+    private final JButton splashDatabases = new JButton("DATABASES");
+    private final JButton splashPatrons = new JButton("PATRONS");
+    private final JButton splashVendors = new JButton("VENDORS");
 
-    public ArrayList<JButton> splashButtons = new ArrayList<>();
-    //private ArrayList<JButton> empButtons = new ArrayList<>();
-    private ArrayList<ArrayList<JButton>> empButtons = new ArrayList<>();
+    private final ArrayList<JButton> splashButtons = new ArrayList<>();
+    private final ArrayList<ArrayList<JButton>> empButtons = new ArrayList<>();
 
     WriteData write;
     ReadFile read;
 
     // objects used in SearchGUI
-    public JPanel searchMasterPanel = new JPanel();
-    public JComboBox search1Box = new JComboBox();
-    public JComboBox search2Box = new JComboBox();
-    private ArrayList<String> filterDepartment = new ArrayList<>();
-    private ArrayList<String> filterSubject = new ArrayList<>();
-    private ArrayList<String> filterProject = new ArrayList<>();
+    private final JPanel searchMasterPanel = new JPanel();
+    private final JComboBox search1Box = new JComboBox();
+    private final JComboBox search2Box = new JComboBox();
+    private final ArrayList<String> filterDepartment = new ArrayList<>();
+    private final ArrayList<String> filterSubject = new ArrayList<>();
+    private final ArrayList<String> filterProject = new ArrayList<>();
 
     // objects used in DataGUI
-    public JPanel mediaMasterPanel = new JPanel();
-    public JPanel mediaSuperMasterPanel = new JPanel();
-    public JPanel employeeMasterPanel = new JPanel();
-    public JPanel employeeSuperMasterPanel = new JPanel();
+    private final JPanel mediaMasterPanel = new JPanel();
+    private final JPanel mediaSuperMasterPanel = new JPanel();
+    private final JPanel employeeMasterPanel = new JPanel();
+    private final JPanel employeeSuperMasterPanel = new JPanel();
 
     // gui attributes
     private int currentUser = 1;
     private int currentRank = 1;
     private ArrayList<String> empAtt = new ArrayList<>();
-    private String[] headings = {"ID", "Name", "Department", "Boss ID", "Project", "Subject", "Req. Materials",
+    private final String[] headings = {"ID", "Name", "Department", "Boss ID", "Project", "Subject", "Req. Materials",
                                  "Alloc. Budget", "Spent Budget", "Perm. Level", "Employed"};
 
     // index values
-    private int permissionIndex = 8;
-    private int employedIndex = 9;
+    private final int permissionIndex = 8;
+    private final int employedIndex = 9;
 
     public GUI(WriteData write, ReadFile read){
         this.write = write;
@@ -118,7 +117,7 @@ public class GUI implements ActionListener {
         };
     }
 
-    public void buildLogin() {
+    private void buildLogin() {
         loginMasterPanel.setBackground(menuBlue);
         loginMasterPanel.add(loginSecondaryPanel);
         BoxLayout box = new BoxLayout(loginSecondaryPanel, BoxLayout.Y_AXIS);
@@ -138,7 +137,7 @@ public class GUI implements ActionListener {
         loginQuit.addActionListener(this);
     }
 
-    public void buildSplash() {
+    private void buildSplash() {
         splashMasterPanel.setBackground(menuBlue);
         splashMasterPanel.add(splashSecondaryPanel);
         BoxLayout box = new BoxLayout(splashSecondaryPanel, BoxLayout.Y_AXIS);
@@ -160,7 +159,7 @@ public class GUI implements ActionListener {
         splashSecondaryPanel.add(splashDatabases);
     }
 
-    public void buildSearch(){
+    private void buildSearch(){
         employeeSuperMasterPanel.add(searchMasterPanel);
         searchMasterPanel.setPreferredSize(new Dimension(1920, 100));
         searchMasterPanel.setBackground(menuBlue);
@@ -168,7 +167,7 @@ public class GUI implements ActionListener {
         searchMasterPanel.add(search2Box);
     }
 
-    public void buildEmployee() {
+    private void buildEmployee() {
 
         int passwordIndex = 9;
 
@@ -551,12 +550,12 @@ public class GUI implements ActionListener {
         }
     }
 
-    public void buildMedia(){
+    private void buildMedia(){
         //mediaMasterPanel.setBackground(menuBlue);
         mediaMasterPanel.setBackground(Color.PINK);
     }
 
-    public void changeScreen(int screen) {
+    private void changeScreen(int screen) {
         String screenName = "";
         switch (screen) {
             case 1 -> screenName = "login";
@@ -578,7 +577,7 @@ public class GUI implements ActionListener {
         frame.setLocationRelativeTo(null);
     }
 
-    public void buildMainPanel() {
+    private void buildMainPanel() {
         mainMasterPanel.setLayout(cl);
         mainMasterPanel.add(loginMasterPanel, "login");
         mainMasterPanel.add(splashMasterPanel, "splash");
@@ -588,7 +587,7 @@ public class GUI implements ActionListener {
         changeScreen(1);
     }
 
-    public void switchTest()
+    private void switchTest()
     {
         for(int i = 1; i < 4; i++)
         {
@@ -602,7 +601,7 @@ public class GUI implements ActionListener {
         }
     }
 
-    public void logIn(){
+    private void logIn(){
         boolean valid = false;
         boolean empty = false;
 
