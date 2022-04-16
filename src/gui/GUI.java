@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import data.*;
@@ -32,7 +31,7 @@ public class GUI implements ActionListener {
     private final JLabel loginUsernameLabel = new JLabel("Username");
     private final JLabel loginPasswordLabel = new JLabel("Password");
     private final JTextField loginUsernameField = new JTextField();
-    private final JTextField loginPasswordField = new JTextField();
+    private final JPasswordField loginPasswordField = new JPasswordField();
     private final JButton loginSubmit = new JButton("SUBMIT");
     private final JButton loginGuestLogin = new JButton("CONTINUE AS GUEST");
     private final JButton loginQuit = new JButton("QUIT");
@@ -95,6 +94,8 @@ public class GUI implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setTitle("Login");
+        frame.setResizable(false);
 
         frame.addWindowListener(onClose());
 
@@ -119,19 +120,38 @@ public class GUI implements ActionListener {
 
     private void buildLogin() {
         loginMasterPanel.setBackground(menuBlue);
-        loginMasterPanel.add(loginSecondaryPanel);
-        BoxLayout box = new BoxLayout(loginSecondaryPanel, BoxLayout.Y_AXIS);
-        loginSecondaryPanel.setLayout(box);
-        //loginPasswordField.setEchoChar('*');
-        loginSecondaryPanel.add(libraryName);
-        libraryName.setFont(new Font("Courier", Font.BOLD, 25));
-        loginSecondaryPanel.add(loginUsernameLabel);
-        loginSecondaryPanel.add(loginUsernameField);
-        loginSecondaryPanel.add(loginPasswordLabel);
-        loginSecondaryPanel.add(loginPasswordField);
-        loginSecondaryPanel.add(loginSubmit);
-        loginSecondaryPanel.add(loginGuestLogin);
-        loginSecondaryPanel.add(loginQuit);
+        loginMasterPanel.setLayout(new BoxLayout(loginMasterPanel, BoxLayout.PAGE_AXIS));
+        JLabel spacer = new JLabel();
+        JLabel spacer2 = new JLabel();
+        JLabel spacer3 = new JLabel();
+        JLabel spacer4 = new JLabel();
+        spacer.setPreferredSize(new Dimension(550, 15));
+        spacer2.setPreferredSize(new Dimension(550, 15));
+        spacer3.setPreferredSize(new Dimension(1000, 15));
+        spacer4.setPreferredSize(new Dimension(1000, 30));
+        JPanel loginPanel1 = new JPanel();
+        JPanel loginPanel2 = new JPanel();
+        loginPasswordField.setColumns(10);
+        loginUsernameField.setColumns(10);
+        loginPanel1.setBackground(menuBlue);
+        loginPanel2.setBackground(menuBlue);
+        loginMasterPanel.add(loginPanel1);
+        loginMasterPanel.add(loginPanel2);
+        loginPasswordField.setEchoChar('*');
+        JLabel name = new JLabel("Stonybrook Library");
+        name.setFont(new Font("Courier", Font.BOLD, 25));
+        loginPanel1.add(name);
+        loginPanel1.add(spacer3);
+        loginPanel1.add(loginUsernameLabel);
+        loginPanel1.add(loginUsernameField);
+        loginPanel1.add(spacer);
+        loginPanel1.add(loginPasswordLabel);
+        loginPanel1.add(loginPasswordField);
+        loginPanel1.add(spacer2);
+        loginPanel2.add(spacer4);
+        loginPanel2.add(loginSubmit);
+        loginPanel2.add(loginGuestLogin);
+        loginPanel2.add(loginQuit);
         loginSubmit.addActionListener(this);
         loginGuestLogin.addActionListener(this);
         loginQuit.addActionListener(this);
@@ -681,15 +701,18 @@ public class GUI implements ActionListener {
             logIn();
         }
         else if (e.getSource() == loginGuestLogin){
+            frame.setTitle("Splash");
             changeScreen(2);
         }
         else if (e.getSource() == loginQuit){
             System.exit(0);
         }
         else if (e.getSource() == splashEmployees){
+            frame.setTitle("Employees");
             changeScreen(3);
         }
         else if (e.getSource() == splashMedia){
+            frame.setTitle("Media");
             changeScreen(4);
         }
 
