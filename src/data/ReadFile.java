@@ -81,5 +81,33 @@ public class ReadFile {
 
     }
 
+    public static ArrayList<ArrayList<String>> readUseData(){
+
+        ArrayList<ArrayList<String>> attributes = new ArrayList<>();
+        attributes.add(new ArrayList<>());
+        int index = 0;
+
+        try{
+            File file = new File("Use.txt");
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNextLine()){
+                String line = scanner.nextLine();
+                if(!line.isBlank()) {
+                    attributes.get(index).add(line);
+                }
+                else{
+                    index += 1;
+                    attributes.add(new ArrayList<>());
+                }
+            }
+            attributes.remove(attributes.size() - 1);
+            return attributes;
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
 

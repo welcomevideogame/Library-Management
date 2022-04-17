@@ -7,7 +7,7 @@ biology
 blackstone
 800
 400
-3
+4
 Password
 Yes
 5
@@ -31,7 +31,7 @@ biology
 blackstone
 800
 300
-3
+2
 Password
 Yes
 3
@@ -43,7 +43,7 @@ geography
 iron ingot
 1,500
 700
-3
+5
 Password
 Yes
 2
@@ -67,7 +67,7 @@ math
 diamond
 10,200
 5,600
-4
+3
 Password
 Yes
 7

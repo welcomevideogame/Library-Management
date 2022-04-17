@@ -10,12 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import data.*;
 
-/**
- * authors: jake love, nathan tabb ist 311
- **/
 public class GUI implements ActionListener {
 
     // objects used in all GUIs
@@ -50,6 +46,8 @@ public class GUI implements ActionListener {
 
     WriteData write;
     ReadFile read;
+    useData useData;
+    ArrayList<ArrayList<String>> dbUsage = new ArrayList<>();
 
     // objects used in SearchGUI
     private final JPanel searchMasterPanel = new JPanel();
@@ -64,6 +62,7 @@ public class GUI implements ActionListener {
     private final JPanel mediaSuperMasterPanel = new JPanel();
     private final JPanel employeeMasterPanel = new JPanel();
     private final JPanel employeeSuperMasterPanel = new JPanel();
+    private final JPanel databaseMasterPanel = new JPanel();
 
     // gui attributes
     private int currentUser = 1;
@@ -76,9 +75,11 @@ public class GUI implements ActionListener {
     private final int permissionIndex = 8;
     private final int employedIndex = 9;
 
+
     public GUI(WriteData write, ReadFile read){
         this.write = write;
         this.read = read;
+        useData = new useData();
         for (var entry : read.employee.employeeT.entrySet()) {
             entry.getValue().flipBudgets();
         }
@@ -105,6 +106,7 @@ public class GUI implements ActionListener {
         buildSearch();
         buildEmployee();
         buildMedia();
+        buildDatabase();
         Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPatrons, splashVendors);
     }
 
@@ -114,6 +116,7 @@ public class GUI implements ActionListener {
             public void windowClosing(WindowEvent e) {
                 super.windowOpened(e);
                 WriteData.writeEmp(read.employee.employeeT);
+                if(useData.accessed()) WriteData.writeUse(useData);
             }
         };
     }
@@ -168,6 +171,7 @@ public class GUI implements ActionListener {
         splashMedia.addActionListener(this);
         splashSecondaryPanel.add(splashEmployees);
         splashEmployees.addActionListener(this);
+        splashDatabases.addActionListener(this);
 
         splashEmployees.setVisible(false);
         splashVendors.setVisible(false);
@@ -185,6 +189,9 @@ public class GUI implements ActionListener {
         searchMasterPanel.setBackground(menuBlue);
         searchMasterPanel.add(search1Box);
         searchMasterPanel.add(search2Box);
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(exitActionListener("Employees"));
+        searchMasterPanel.add(exitButton);
     }
 
     private void buildEmployee() {
@@ -208,7 +215,6 @@ public class GUI implements ActionListener {
         employeeMasterPanel.setLayout(layout);
         int currentRow = 0;
 
-        //------------------------------------------------------------------- action listeners
         addEmpHeadings();
 
         ArrayList<JButton> tempButtons = new ArrayList<>();
@@ -268,7 +274,7 @@ public class GUI implements ActionListener {
 
     private ActionListener search1ActionListener(){
 
-        ActionListener filter = e -> {
+        return e -> {
             String item = String.valueOf(search1Box.getSelectedItem());
             if(item.equals("All")){
                 search2Box.removeAllItems();
@@ -301,11 +307,10 @@ public class GUI implements ActionListener {
                 }
             }
         };
-        return filter;
     }
 
     private ActionListener search2ActionListener(){
-        ActionListener filter = e -> {
+        return e -> {
             String filter1 = String.valueOf(search1Box.getSelectedItem());
             String filter2 = String.valueOf(search2Box.getSelectedItem());
 
@@ -316,14 +321,12 @@ public class GUI implements ActionListener {
                 updateButtons(filter2, filter1);
             }
         };
-        return filter;
     }
 
     private void rebuild(){
         int hGap = 25;
         int vGap = 25;
         int passwordIndex = 9;
-        int currentRow = 0;
 
         employeeMasterPanel.removeAll();
         employeeMasterPanel.revalidate();
@@ -361,7 +364,6 @@ public class GUI implements ActionListener {
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
-            currentRow++;
         }
     }
 
@@ -380,7 +382,6 @@ public class GUI implements ActionListener {
         int hGap = 25;
         int vGap = 25;
         int passwordIndex = 9;
-        int currentRow = 0;
 
         employeeMasterPanel.removeAll();
         employeeMasterPanel.revalidate();
@@ -393,20 +394,22 @@ public class GUI implements ActionListener {
 
         for (var entry : read.employee.employeeT.entrySet()) {
             empAtt = entry.getValue().getData();
-            if(category.equals("Department")) {
-                if (empAtt.get(departmentIndex).equals(filter)) {
-                    filteredData.put(entry.getKey(), entry.getValue());
-                }
-            }
-            else if(category.equals("Project")) {
-                if (empAtt.get(projectIndex).equals(filter)) {
-                    filteredData.put(entry.getKey(), entry.getValue());
-                }
-            }
-            else if(category.equals("Subject")) {
-                if (empAtt.get(subjectIndex).equals(filter)) {
-                    filteredData.put(entry.getKey(), entry.getValue());
-                }
+            switch (category) {
+                case "Department":
+                    if (empAtt.get(departmentIndex).equals(filter)) {
+                        filteredData.put(entry.getKey(), entry.getValue());
+                    }
+                    break;
+                case "Project":
+                    if (empAtt.get(projectIndex).equals(filter)) {
+                        filteredData.put(entry.getKey(), entry.getValue());
+                    }
+                    break;
+                case "Subject":
+                    if (empAtt.get(subjectIndex).equals(filter)) {
+                        filteredData.put(entry.getKey(), entry.getValue());
+                    }
+                    break;
             }
         }
 
@@ -439,7 +442,6 @@ public class GUI implements ActionListener {
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
-            currentRow++;
         }
     }
 
@@ -558,7 +560,7 @@ public class GUI implements ActionListener {
         try {
             user.updateRank(newRank);
             for(int i = 0; i != empButtons.size(); i++){
-                if(empButtons.get(i).get(0).getText().equals(key)){ // should have used a hashmap
+                if(empButtons.get(i).get(0).getText().equals(key)){
                     empButtons.get(i).get(permIndex).setText(String.valueOf(newRank));
                 }
             }
@@ -571,8 +573,65 @@ public class GUI implements ActionListener {
     }
 
     private void buildMedia(){
-        //mediaMasterPanel.setBackground(menuBlue);
         mediaMasterPanel.setBackground(Color.PINK);
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(exitActionListener("Media"));
+        mediaMasterPanel.add(exitButton);
+    }
+
+    private void buildDatabase(){
+
+        dbUsage = ReadFile.readUseData();
+        assert dbUsage != null;
+        int columns = dbUsage.get(0).size();
+        int hGap = 25;
+        int vGap = 25;
+
+        String[] headings = {"EmpID", "Used Med", "Used Emp", "Used Pat", "Used Ven", "Used DB",
+                             "Med Time", "Emp Time", "Pat Time", "Ven Time", "DB Time"};
+
+        JLabel title = new JLabel("Stonybrook Access Viewer");
+        title.setFont(new Font("Courier", Font.BOLD, 25));
+        JPanel databaseNorthPanel = new JPanel();
+
+        JPanel databaseGridPanel = new JPanel();
+        GridLayout layout = new GridLayout(dbUsage.size() + 1, columns);
+        layout.setHgap(hGap);
+        layout.setVgap(vGap);
+        databaseGridPanel.setLayout(layout);
+
+        for(int i = 0; i != headings.length; i++){
+            JButton useButton = new JButton(headings[i]);
+            databaseGridPanel.add(useButton);
+        }
+        for(int i = 0; i != dbUsage.size(); i++){
+            for(int j = 0; j != dbUsage.get(i).size(); j++){
+                JButton useButton = new JButton(dbUsage.get(i).get(j));
+                databaseGridPanel.add(useButton);
+            }
+        }
+
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(exitActionListener("Databases"));
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(new Dimension(1900, 50));
+        databaseNorthPanel.add(title);
+        databaseNorthPanel.add(exitButton);
+        databaseMasterPanel.add(databaseNorthPanel);
+        databaseMasterPanel.add(spacer);
+        databaseMasterPanel.add(databaseGridPanel);
+
+        databaseMasterPanel.setBackground(menuBlue);
+        databaseNorthPanel.setBackground(menuBlue);
+        databaseGridPanel.setBackground(menuBlue);
+
+    }
+
+    private ActionListener exitActionListener(String db){
+        return e -> {
+            changeScreen(2);
+            useData.endTimer(db);
+        };
     }
 
     private void changeScreen(int screen) {
@@ -582,6 +641,7 @@ public class GUI implements ActionListener {
             case 2 -> screenName = "splash";
             case 3 -> screenName = "employee";
             case 4 -> screenName = "media";
+            case 7 -> screenName = "database";
 
         }
         setScreenSize(screenName);
@@ -592,7 +652,8 @@ public class GUI implements ActionListener {
         HashMap<String, Dimension> size = new HashMap<>(Map.of("login", new Dimension(500, 300),
                 "splash", new Dimension(500, 300),
                 "employee", new Dimension(1920, 1080),
-                "media", new Dimension(1500, 1000)));
+                "media", new Dimension(1500, 1000),
+                "database", new Dimension(1500, 1000)));
         frame.setSize(size.get(screen));
         frame.setLocationRelativeTo(null);
     }
@@ -603,22 +664,9 @@ public class GUI implements ActionListener {
         mainMasterPanel.add(splashMasterPanel, "splash");
         mainMasterPanel.add(employeeSuperMasterPanel, "employee");
         mainMasterPanel.add(mediaMasterPanel, "media");
+        mainMasterPanel.add(databaseMasterPanel, "database");
         frame.add(mainMasterPanel);
         changeScreen(1);
-    }
-
-    private void switchTest()
-    {
-        for(int i = 1; i < 4; i++)
-        {
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-
-            }
-            changeScreen(i);
-        }
     }
 
     private void logIn(){
@@ -626,7 +674,7 @@ public class GUI implements ActionListener {
         boolean empty = false;
 
         String user = loginUsernameField.getText();
-        String password = loginPasswordField.getText();
+        String password = new String(loginPasswordField.getPassword());
 
         try {
             valid = read.employee.login(user, password);
@@ -644,6 +692,7 @@ public class GUI implements ActionListener {
                 currentUser = Integer.parseInt(user);
                 currentRank = Integer.parseInt(read.employee.employeeT.get(user).getPermissisonLevel());
                 setButtons();
+                useData.setEmpID(String.valueOf(currentUser));
                 changeScreen(2);
             }
             catch (NumberFormatException e){
@@ -660,32 +709,16 @@ public class GUI implements ActionListener {
     }
 
     private void setButtons(){
-        ArrayList<Integer> index = new ArrayList<Integer>();
-        switch(currentRank){
-            case 1:{
-                Collections.addAll(index, 0);
-                break;
-            }
-            case 2:{
-                Collections.addAll(index, 0, 2, 4);
-                break;
-            }
-            case 3:{
-                Collections.addAll(index, 0, 2, 3, 4);
-                break;
-            }
-            case 4:{
-                Collections.addAll(index, 0, 1, 2, 3);
-                break;
-            }
-            case 5:{
-                Collections.addAll(index, 0, 1, 2, 3, 4);
-                break;
-            }
-            default:{
-                break;
-            }
+        ArrayList<Integer> index = new ArrayList<>();
+
+        switch (currentRank) {
+            case 1 -> Collections.addAll(index, 0);
+            case 2 -> Collections.addAll(index, 0, 2, 4);
+            case 3 -> Collections.addAll(index, 0, 2, 3, 4);
+            case 4 -> Collections.addAll(index, 0, 1, 2, 3);
+            case 5 -> Collections.addAll(index, 0, 1, 2, 3, 4);
         }
+
         for (int i = 0; i != splashButtons.size(); i++) {
             splashButtons.get(i).setVisible(false);
         }
@@ -709,11 +742,18 @@ public class GUI implements ActionListener {
         }
         else if (e.getSource() == splashEmployees){
             frame.setTitle("Employees");
+            useData.startTimer();
             changeScreen(3);
         }
         else if (e.getSource() == splashMedia){
             frame.setTitle("Media");
+            useData.startTimer();
             changeScreen(4);
+        }
+        else if (e.getSource() == splashDatabases){
+            frame.setTitle("Databases");
+            useData.startTimer();
+            changeScreen(7);
         }
 
     }
