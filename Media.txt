@@ -1,3 +1,24 @@
+5
+Guitar Hero
+Videogame
+14 Days
+Yes
+2022-07-03
+Neversoft
+4
+Hunger Games
+Movie
+7 Days
+Yes
+2022-08-06
+People
+3
+Sonic Underground
+TV Show
+7 Days
+Yes
+2022-01-03
+Sega
 2
 Pokemon the Movie
 Movie
@@ -10,5 +31,5 @@ Ender's Game
 Book
 14 Days
 No
-2022-12-12
+2022-02-12
 Universal

@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.Date;
 
 public class media {
-    Hashtable<String, mediaData> mediaT = new Hashtable();
+    public Hashtable<String, mediaData> mediaT = new Hashtable();
     String mediaID;
 
     public media() {

@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+
 import data.*;
 
 public class GUI implements ActionListener {
@@ -23,7 +23,6 @@ public class GUI implements ActionListener {
 
     // objects used in LoginGUI
     private final JPanel loginMasterPanel = new JPanel();
-    private final JPanel loginSecondaryPanel = new JPanel();
     private final JLabel loginUsernameLabel = new JLabel("Username");
     private final JLabel loginPasswordLabel = new JLabel("Password");
     private final JTextField loginUsernameField = new JTextField();
@@ -59,10 +58,11 @@ public class GUI implements ActionListener {
 
     // objects used in DataGUI
     private final JPanel mediaMasterPanel = new JPanel();
-    private final JPanel mediaSuperMasterPanel = new JPanel();
+    private final JPanel mediaGridPanel = new JPanel();
     private final JPanel employeeMasterPanel = new JPanel();
     private final JPanel employeeSuperMasterPanel = new JPanel();
     private final JPanel databaseMasterPanel = new JPanel();
+    private final JButton mediaOverdue = new JButton();
 
     // gui attributes
     private int currentUser = 1;
@@ -573,10 +573,100 @@ public class GUI implements ActionListener {
     }
 
     private void buildMedia(){
-        mediaMasterPanel.setBackground(Color.PINK);
+
+        JPanel mediaNorthPanel = new JPanel();
+        mediaMasterPanel.setBackground(menuBlue);
+        mediaGridPanel.setBackground(menuBlue);
+        mediaNorthPanel.setBackground(menuBlue);
+
+        mediaOverdue.setText("Overdue");
+        mediaOverdue.addActionListener(this);
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(exitActionListener("Media"));
-        mediaMasterPanel.add(exitButton);
+
+        JLabel title = new JLabel("Stonybrook Media Viewer");
+        title.setFont(new Font("Courier", Font.BOLD, 25));
+
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(new Dimension(1920, 15));
+        JLabel spacer2 = new JLabel();
+        spacer2.setPreferredSize(new Dimension(100, 0));
+
+        mediaNorthPanel.add(title);
+        mediaNorthPanel.add(new Label());
+        mediaNorthPanel.add(mediaOverdue);
+        mediaNorthPanel.add(spacer2);
+        mediaNorthPanel.add(exitButton);
+        mediaMasterPanel.add(mediaNorthPanel);
+        mediaMasterPanel.add(spacer);
+        mediaMasterPanel.add(mediaGridPanel);
+        buildMediaButtons(read.Media.mediaT);
+    }
+
+    private void buildMediaButtons(Hashtable<String, mediaData> ht){
+
+        int hGap = 25;
+        int vGap = 25;
+
+        int dateIndex = 4;
+
+        String[] headings = {"MediaID", "Name", "Type", "BorrowTime", "Borrowable", "DueDate", "Vendor"};
+        GridLayout layout = new GridLayout(ht.size() + 1, headings.length);
+        layout.setHgap(hGap);
+        layout.setVgap(vGap);
+
+        mediaGridPanel.setLayout(layout);
+
+        for(int i = 0; i != headings.length; i++){
+            JButton useButton = new JButton(headings[i]);
+            mediaGridPanel.add(useButton);
+        }
+
+        ArrayList<String> tempValues;
+        for (var entry : ht.entrySet()) {
+            tempValues = entry.getValue().getData();
+            JButton idButton = new JButton(entry.getKey());
+            mediaGridPanel.add(idButton);
+            for(int i = 0; i != tempValues.size(); i++) {
+                JButton attButton = new JButton(tempValues.get(i));
+                mediaGridPanel.add(attButton);
+                if (i == dateIndex) {
+                    if(checkOverdue(tempValues.get(i))){
+                        attButton.setBackground(new Color(255, 50, 50));
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean checkOverdue(String date){
+        try {
+            return LocalDate.parse(date).isBefore(LocalDate.now());
+        }
+        catch(DateTimeParseException e){
+            return true;
+        }
+    }
+
+    private void clearMedia(){
+        mediaGridPanel.removeAll();
+        mediaGridPanel.revalidate();
+        mediaGridPanel.repaint();
+    }
+
+    private void filterOverdue(){
+
+        clearMedia();
+        int dateIndex = 4;
+
+        Hashtable<String, mediaData> filteredMedia = new Hashtable<>();
+
+        for (var entry : read.Media.mediaT.entrySet()) {
+            if(checkOverdue(entry.getValue().getData().get(dateIndex))) {
+                filteredMedia.put(entry.getKey(), entry.getValue());
+            }
+        }
+        buildMediaButtons(filteredMedia);
     }
 
     private void buildDatabase(){
@@ -754,6 +844,17 @@ public class GUI implements ActionListener {
             frame.setTitle("Databases");
             useData.startTimer();
             changeScreen(7);
+        }
+        else if (e.getSource() == mediaOverdue){
+            if(mediaOverdue.getText().equals("Overdue")) {
+                mediaOverdue.setText("Revert");
+                filterOverdue();
+            }
+            else{
+                mediaOverdue.setText("Overdue");
+                clearMedia();
+                buildMediaButtons(read.Media.mediaT);
+            }
         }
 
     }

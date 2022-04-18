@@ -43,7 +43,8 @@ public class WriteData {
     public static void writeUse(useData useData){
         try{
             FileWriter writer = new FileWriter("Use.txt", true);
-            writer.write(useData.getEmpID() + "\n");
+
+            if(useData.getEmpID() != null) writer.write(useData.getEmpID() + "\n"); else writer.write("Guest\n");
 
 
             String[] categories = {"Media", "Employees", "Patrons", "Vendors", "Databases"};

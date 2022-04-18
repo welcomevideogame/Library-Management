@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class ReadFile {
-    media Media = new media();
+    public media Media = new media();
     public Employee employee = new Employee();
 
     //public ReadFile(Employee employee){}
