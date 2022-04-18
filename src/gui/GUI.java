@@ -55,6 +55,7 @@ public class GUI implements ActionListener {
     private final ArrayList<String> filterDepartment = new ArrayList<>();
     private final ArrayList<String> filterSubject = new ArrayList<>();
     private final ArrayList<String> filterProject = new ArrayList<>();
+    private final ArrayList<String> filterBoss = new ArrayList<>();
 
     // objects used in DataGUI
     private final JPanel mediaMasterPanel = new JPanel();
@@ -213,7 +214,6 @@ public class GUI implements ActionListener {
         layout.setVgap(vGap);
 
         employeeMasterPanel.setLayout(layout);
-        int currentRow = 0;
 
         addEmpHeadings();
 
@@ -225,6 +225,9 @@ public class GUI implements ActionListener {
             // -- filter stuff
             if(!filterDepartment.contains(empAtt.get(1))){
                 filterDepartment.add(empAtt.get(1));
+            }
+            if(!filterBoss.contains(empAtt.get(2))){
+                filterBoss.add(empAtt.get(2));
             }
             if(!filterProject.contains(empAtt.get(3))){
                 filterProject.add(empAtt.get(3));
@@ -253,13 +256,12 @@ public class GUI implements ActionListener {
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
-            currentRow++;
         }
         populateComboBox();
     }
 
     private void populateComboBox(){
-        String[] filters = {"Department", "Project", "Subject"};
+        String[] filters = {"Department", "Boss", "Project", "Subject"};
         search1Box.addItem("All");
 
         for(int i = 0; i != filters.length; i++) {
@@ -290,6 +292,12 @@ public class GUI implements ActionListener {
                     case "Department" ->  {
                         for(int i = 0; i != filterDepartment.size(); i++){
                             search2Box.addItem(filterDepartment.get(i));
+                        }
+                    }
+
+                    case "Boss" -> {
+                        for(int i = 0; i != filterBoss.size(); i++){
+                            search2Box.addItem(filterBoss.get(i));
                         }
                     }
 
@@ -375,8 +383,10 @@ public class GUI implements ActionListener {
             employeeMasterPanel.add(headingButton);
         }
     }
+
     private void updateButtons(String filter, String category){
         int departmentIndex = 1;
+        int bossIndex = 2;
         int projectIndex = 3;
         int subjectIndex = 4;
         int hGap = 25;
@@ -400,6 +410,10 @@ public class GUI implements ActionListener {
                         filteredData.put(entry.getKey(), entry.getValue());
                     }
                     break;
+                case "Boss":
+                    if (empAtt.get(bossIndex).equals(filter)){
+                        filteredData.put(entry.getKey(), entry.getValue());
+                    }
                 case "Project":
                     if (empAtt.get(projectIndex).equals(filter)) {
                         filteredData.put(entry.getKey(), entry.getValue());
