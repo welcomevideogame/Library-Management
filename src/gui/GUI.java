@@ -52,10 +52,12 @@ public class GUI implements ActionListener {
     private final JPanel searchMasterPanel = new JPanel();
     private final JComboBox search1Box = new JComboBox();
     private final JComboBox search2Box = new JComboBox();
+    private final JComboBox searchMedBox = new JComboBox();
     private final ArrayList<String> filterDepartment = new ArrayList<>();
     private final ArrayList<String> filterSubject = new ArrayList<>();
     private final ArrayList<String> filterProject = new ArrayList<>();
     private final ArrayList<String> filterBoss = new ArrayList<>();
+    private final ArrayList<String> filterVendor = new ArrayList<>();
 
     // objects used in DataGUI
     private final JPanel mediaMasterPanel = new JPanel();
@@ -63,6 +65,7 @@ public class GUI implements ActionListener {
     private final JPanel employeeMasterPanel = new JPanel();
     private final JPanel employeeSuperMasterPanel = new JPanel();
     private final JPanel databaseMasterPanel = new JPanel();
+    private final JScrollPane databaseScrollPane = new JScrollPane(databaseMasterPanel);
     private final JButton mediaOverdue = new JButton();
 
     // gui attributes
@@ -609,12 +612,60 @@ public class GUI implements ActionListener {
         mediaNorthPanel.add(title);
         mediaNorthPanel.add(new Label());
         mediaNorthPanel.add(mediaOverdue);
+        mediaNorthPanel.add(searchMedBox);
         mediaNorthPanel.add(spacer2);
         mediaNorthPanel.add(exitButton);
         mediaMasterPanel.add(mediaNorthPanel);
         mediaMasterPanel.add(spacer);
         mediaMasterPanel.add(mediaGridPanel);
+        getMediaFilter();
+        populateMedCombo();
         buildMediaButtons(read.Media.mediaT);
+    }
+
+    private void populateMedCombo(){
+        searchMedBox.addItem("All");
+        for(int i = 0; i != filterVendor.size(); i++){
+            searchMedBox.addItem(filterVendor.get(i));
+        }
+        searchMedBox.setSelectedIndex(0);
+        searchMedBox.addActionListener(medComboAction());
+    }
+
+    private ActionListener medComboAction(){
+        return e -> {
+            if(mediaOverdue.getText().equals("Revert")) mediaOverdue.setText("Overdue");
+
+            String filter = String.valueOf(searchMedBox.getSelectedItem());
+
+            if(filter.equals("All")){
+                clearMedia();
+                buildMediaButtons(read.Media.mediaT);
+            }
+            else{
+                filterVendor(filter);
+            }
+        };
+    }
+
+    private void filterVendor(String filter){
+        int vendorIndex = 5;
+        clearMedia();
+        Hashtable<String, mediaData> filteredData = new Hashtable<>();
+        for(var entry: read.Media.mediaT.entrySet()){
+            if(entry.getValue().getData().get(vendorIndex).equals(filter)){
+                filteredData.put(entry.getKey(), entry.getValue());
+            }
+        }
+        buildMediaButtons(filteredData);
+    }
+
+    private void getMediaFilter(){
+        int vendorIndex = 5;
+        for (var entry : read.Media.mediaT.entrySet()) {
+            String vendorName = entry.getValue().getData().get(vendorIndex);
+            if(!filterVendor.contains(vendorName)) filterVendor.add(vendorName);
+        }
     }
 
     private void buildMediaButtons(Hashtable<String, mediaData> ht){
@@ -670,7 +721,6 @@ public class GUI implements ActionListener {
 
     private void filterOverdue(){
 
-        clearMedia();
         int dateIndex = 4;
 
         Hashtable<String, mediaData> filteredMedia = new Hashtable<>();
@@ -715,15 +765,21 @@ public class GUI implements ActionListener {
             }
         }
 
+        databaseScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        databaseScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(exitActionListener("Databases"));
         JLabel spacer = new JLabel();
-        spacer.setPreferredSize(new Dimension(1900, 50));
+        spacer.setPreferredSize(new Dimension(1, 30));
+
         databaseNorthPanel.add(title);
         databaseNorthPanel.add(exitButton);
-        databaseMasterPanel.add(databaseNorthPanel);
-        databaseMasterPanel.add(spacer);
-        databaseMasterPanel.add(databaseGridPanel);
+
+        databaseMasterPanel.setLayout(new BorderLayout());
+        databaseMasterPanel.add(databaseNorthPanel, BorderLayout.NORTH);
+        databaseMasterPanel.add(spacer, BorderLayout.CENTER);
+        databaseMasterPanel.add(databaseGridPanel, BorderLayout.SOUTH);
 
         databaseMasterPanel.setBackground(menuBlue);
         databaseNorthPanel.setBackground(menuBlue);
@@ -768,7 +824,7 @@ public class GUI implements ActionListener {
         mainMasterPanel.add(splashMasterPanel, "splash");
         mainMasterPanel.add(employeeSuperMasterPanel, "employee");
         mainMasterPanel.add(mediaMasterPanel, "media");
-        mainMasterPanel.add(databaseMasterPanel, "database");
+        mainMasterPanel.add(databaseScrollPane, "database");
         frame.add(mainMasterPanel);
         changeScreen(1);
     }
@@ -860,16 +916,16 @@ public class GUI implements ActionListener {
             changeScreen(7);
         }
         else if (e.getSource() == mediaOverdue){
+            searchMedBox.setSelectedIndex(0);
+            clearMedia();
             if(mediaOverdue.getText().equals("Overdue")) {
                 mediaOverdue.setText("Revert");
                 filterOverdue();
             }
             else{
                 mediaOverdue.setText("Overdue");
-                clearMedia();
                 buildMediaButtons(read.Media.mediaT);
             }
         }
-
     }
 }
