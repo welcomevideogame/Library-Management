@@ -170,23 +170,36 @@ public class GUI implements ActionListener {
 
     private void buildSplash() {
         splashMasterPanel.setBackground(menuBlue);
-        splashMasterPanel.add(splashSecondaryPanel);
-        BoxLayout box = new BoxLayout(splashSecondaryPanel, BoxLayout.Y_AXIS);
-        splashSecondaryPanel.add(libraryName);
+        splashSecondaryPanel.setBackground(menuBlue);
+        GridLayout layout = new GridLayout(5, 1);
+        layout.setVgap(25);
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(new Dimension(1900, 50));
+        splashMasterPanel.add(libraryName);
+        splashMasterPanel.add(spacer);
         libraryName.setFont(new Font("Courier", Font.BOLD, 25));
-        splashSecondaryPanel.setLayout(box);
+        splashSecondaryPanel.setLayout(layout);
+
         splashSecondaryPanel.add(splashMedia);
-        splashMedia.addActionListener(this);
         splashSecondaryPanel.add(splashEmployees);
+        splashSecondaryPanel.add(splashDatabases);
+        splashSecondaryPanel.add(splashPassword);
+        splashMasterPanel.add(splashSecondaryPanel);
+
+        splashMedia.addActionListener(this);
         splashEmployees.addActionListener(this);
         splashDatabases.addActionListener(this);
         splashPassword.addActionListener(this);
 
+        Dimension buttonSize = new Dimension(250, 35);
+        splashMedia.setPreferredSize(buttonSize);
+        splashEmployees.setPreferredSize(buttonSize);
+        splashDatabases.setPreferredSize(buttonSize);
+        splashPassword.setPreferredSize(buttonSize);
+
         splashEmployees.setVisible(false);
         splashPassword.setVisible(false);
         splashDatabases.setVisible(false);
-        splashSecondaryPanel.add(splashDatabases);
-        splashSecondaryPanel.add(splashPassword);
     }
 
     private void buildSearch(){
@@ -828,6 +841,7 @@ public class GUI implements ActionListener {
         passwordFields.add(conPassword);
         passwordFields.add(new JLabel());
         passwordMasterPanel.add(title);
+        passwordMasterPanel.add(exitButton);
         JLabel spacer = new JLabel();
         spacer.setPreferredSize(new Dimension(1000, 50));
         JLabel spacer2 = new JLabel();
@@ -908,7 +922,7 @@ public class GUI implements ActionListener {
 
     private void setScreenSize(String screen){
         HashMap<String, Dimension> size = new HashMap<>(Map.of("login", new Dimension(500, 300),
-                "splash", new Dimension(500, 300),
+                "splash", new Dimension(500, 450),
                 "employee", new Dimension(1920, 1080),
                 "media", new Dimension(1500, 1000),
                 "database", new Dimension(1500, 1000),
