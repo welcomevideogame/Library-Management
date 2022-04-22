@@ -37,8 +37,7 @@ public class GUI implements ActionListener {
     private final JButton splashMedia = new JButton("MEDIA");
     private final JButton splashEmployees = new JButton("EMPLOYEES");
     private final JButton splashDatabases = new JButton("DATABASES");
-    private final JButton splashPatrons = new JButton("PATRONS");
-    private final JButton splashVendors = new JButton("VENDORS");
+    private final JButton splashPassword = new JButton("CHANGE PASSWORD");
 
     private final ArrayList<JButton> splashButtons = new ArrayList<>();
     private final ArrayList<ArrayList<JButton>> empButtons = new ArrayList<>();
@@ -65,6 +64,10 @@ public class GUI implements ActionListener {
     private final JPanel employeeMasterPanel = new JPanel();
     private final JPanel employeeSuperMasterPanel = new JPanel();
     private final JPanel databaseMasterPanel = new JPanel();
+
+    private final JPanel passwordMasterPanel = new JPanel();
+    private final ArrayList<JPasswordField> newPasswordFields = new ArrayList<>();
+
     private final JScrollPane databaseScrollPane = new JScrollPane(databaseMasterPanel);
     private final JButton mediaOverdue = new JButton();
 
@@ -111,7 +114,8 @@ public class GUI implements ActionListener {
         buildEmployee();
         buildMedia();
         buildDatabase();
-        Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPatrons, splashVendors);
+        buildPassword();
+        Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPassword);
     }
 
     private WindowAdapter onClose(){
@@ -176,15 +180,13 @@ public class GUI implements ActionListener {
         splashSecondaryPanel.add(splashEmployees);
         splashEmployees.addActionListener(this);
         splashDatabases.addActionListener(this);
+        splashPassword.addActionListener(this);
 
         splashEmployees.setVisible(false);
-        splashVendors.setVisible(false);
-        splashPatrons.setVisible(false);
+        splashPassword.setVisible(false);
         splashDatabases.setVisible(false);
-
-        splashSecondaryPanel.add(splashPatrons);
-        splashSecondaryPanel.add(splashVendors);
         splashSecondaryPanel.add(splashDatabases);
+        splashSecondaryPanel.add(splashPassword);
     }
 
     private void buildSearch(){
@@ -787,10 +789,105 @@ public class GUI implements ActionListener {
 
     }
 
+    private void buildPassword(){
+        JPanel passwordFields = new JPanel();
+        passwordFields.setBackground(menuBlue);
+        passwordMasterPanel.setBackground(menuBlue);
+
+        GridLayout layout = new GridLayout(10, 1);
+        passwordFields.setLayout(layout);
+
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(exitActionListener(""));
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.setPreferredSize(new Dimension(75, 30));
+        submitButton.addActionListener(passwordActionListener());
+
+        JLabel title = new JLabel("Account Settings: Password");
+        title.setFont(new Font("Courier", Font.BOLD, 25));
+
+        JLabel oldPasswordLabel = new JLabel("Old Password                      ");
+        oldPasswordLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JPasswordField oldPassword = new JPasswordField();
+        JLabel newPasswordLabel = new JLabel("New Password");
+        newPasswordLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JPasswordField newPassword = new JPasswordField();
+
+        JLabel conPasswordLabel = new JLabel("Confirm Password");
+        conPasswordLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JPasswordField conPassword = new JPasswordField();
+
+        passwordFields.add(oldPasswordLabel);
+        passwordFields.add(oldPassword);
+        passwordFields.add(new JLabel());
+        passwordFields.add(newPasswordLabel);
+        passwordFields.add(newPassword);
+        passwordFields.add(new JLabel());
+        passwordFields.add(conPasswordLabel);
+        passwordFields.add(conPassword);
+        passwordFields.add(new JLabel());
+        passwordMasterPanel.add(title);
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(new Dimension(1000, 50));
+        JLabel spacer2 = new JLabel();
+        spacer2.setPreferredSize(new Dimension(1000, 10));
+        passwordMasterPanel.add(spacer);
+        passwordMasterPanel.add(passwordFields);
+        passwordMasterPanel.add(spacer2);
+        passwordMasterPanel.add(submitButton);
+        Collections.addAll(newPasswordFields, oldPassword, newPassword, conPassword);
+    }
+
+    private ActionListener passwordActionListener(){
+        return e -> {
+            String oP = String.valueOf(newPasswordFields.get(0).getPassword());
+            String nP = String.valueOf(newPasswordFields.get(1).getPassword());
+            String cP = String.valueOf(newPasswordFields.get(2).getPassword());
+            if(!(oP.isEmpty() || nP.isEmpty() || cP.isEmpty())){
+                handlePassword(oP, nP, cP);
+            }
+            else{
+                JOptionPane optionPane = new JOptionPane("One or more fields is empty", JOptionPane.ERROR_MESSAGE);
+                JDialog dialog = optionPane.createDialog("Empty field");
+                dialog.setVisible(true);
+            }
+        };
+    }
+
+    private void handlePassword(String oP, String nP, String cP){
+        String currentPassword = read.employee.employeeT.get(String.valueOf(currentUser)).getPassword();
+        JOptionPane optionPane;
+        JDialog dialog;
+
+        boolean valid = false;
+
+        if(!oP.equals(currentPassword)){
+            optionPane = new JOptionPane("Old password is incorrect", JOptionPane.ERROR_MESSAGE);
+            dialog = optionPane.createDialog("Incorrect password");
+        }
+        else if(!nP.equals(cP)){
+            optionPane = new JOptionPane("Passwords do not match", JOptionPane.ERROR_MESSAGE);
+            dialog = optionPane.createDialog("Not matching");
+        }
+        else{
+            optionPane = new JOptionPane("Password has been changed", JOptionPane.INFORMATION_MESSAGE);
+            dialog = optionPane.createDialog("Success");
+            read.employee.employeeT.get(String.valueOf(currentUser)).setPassword(nP);
+            valid = true;
+        }
+        dialog.setVisible(true);
+        if(valid){
+            changeScreen(2);
+        }
+    }
+
     private ActionListener exitActionListener(String db){
         return e -> {
             changeScreen(2);
-            useData.endTimer(db);
+            if(!db.isEmpty()) {
+                useData.endTimer(db);
+            }
         };
     }
 
@@ -801,7 +898,8 @@ public class GUI implements ActionListener {
             case 2 -> screenName = "splash";
             case 3 -> screenName = "employee";
             case 4 -> screenName = "media";
-            case 7 -> screenName = "database";
+            case 5 -> screenName = "database";
+            case 6 -> screenName = "password";
 
         }
         setScreenSize(screenName);
@@ -813,7 +911,8 @@ public class GUI implements ActionListener {
                 "splash", new Dimension(500, 300),
                 "employee", new Dimension(1920, 1080),
                 "media", new Dimension(1500, 1000),
-                "database", new Dimension(1500, 1000)));
+                "database", new Dimension(1500, 1000),
+                "password", new Dimension(500, 500)));
         frame.setSize(size.get(screen));
         frame.setLocationRelativeTo(null);
     }
@@ -825,6 +924,7 @@ public class GUI implements ActionListener {
         mainMasterPanel.add(employeeSuperMasterPanel, "employee");
         mainMasterPanel.add(mediaMasterPanel, "media");
         mainMasterPanel.add(databaseScrollPane, "database");
+        mainMasterPanel.add(passwordMasterPanel, "password");
         frame.add(mainMasterPanel);
         changeScreen(1);
     }
@@ -873,8 +973,8 @@ public class GUI implements ActionListener {
 
         switch (currentRank) {
             case 1 -> Collections.addAll(index, 0);
-            case 2 -> Collections.addAll(index, 0, 2, 4);
-            case 3 -> Collections.addAll(index, 0, 2, 3, 4);
+            case 2 -> Collections.addAll(index, 0, 3);
+            case 3 -> Collections.addAll(index, 0, 2, 3);
             case 4 -> Collections.addAll(index, 0, 1, 2, 3);
             case 5 -> Collections.addAll(index, 0, 1, 2, 3, 4);
         }
@@ -913,7 +1013,11 @@ public class GUI implements ActionListener {
         else if (e.getSource() == splashDatabases){
             frame.setTitle("Databases");
             useData.startTimer();
-            changeScreen(7);
+            changeScreen(5);
+        }
+        else if (e.getSource() == splashPassword){
+            frame.setTitle("Account Settings");
+            changeScreen(6);
         }
         else if (e.getSource() == mediaOverdue){
             searchMedBox.setSelectedIndex(0);

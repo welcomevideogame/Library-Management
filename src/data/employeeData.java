@@ -47,6 +47,10 @@ public class employeeData {
         return password;
     }
 
+    public void setPassword(String newPassword){
+        password = newPassword;
+    }
+
     public String getPermissisonLevel(){
         return permisisonLevel;
     }
