@@ -38,6 +38,7 @@ public class GUI implements ActionListener {
     private final JButton splashEmployees = new JButton("EMPLOYEES");
     private final JButton splashDatabases = new JButton("DATABASES");
     private final JButton splashPassword = new JButton("CHANGE PASSWORD");
+    private final JButton splashAccount = new JButton("CREATE NEW EMPLOYEE");
 
     private final ArrayList<JButton> splashButtons = new ArrayList<>();
     private final ArrayList<ArrayList<JButton>> empButtons = new ArrayList<>();
@@ -67,6 +68,9 @@ public class GUI implements ActionListener {
 
     private final JPanel passwordMasterPanel = new JPanel();
     private final ArrayList<JPasswordField> newPasswordFields = new ArrayList<>();
+
+    private final JPanel accountMasterPanel = new JPanel();
+    private final ArrayList<Object> newAccountFields = new ArrayList<>();
 
     private final JScrollPane databaseScrollPane = new JScrollPane(databaseMasterPanel);
     private final JButton mediaOverdue = new JButton();
@@ -115,7 +119,8 @@ public class GUI implements ActionListener {
         buildMedia();
         buildDatabase();
         buildPassword();
-        Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPassword);
+        buildAccount();
+        Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPassword, splashAccount);
     }
 
     private WindowAdapter onClose(){
@@ -174,7 +179,7 @@ public class GUI implements ActionListener {
         GridLayout layout = new GridLayout(5, 1);
         layout.setVgap(25);
         JLabel spacer = new JLabel();
-        spacer.setPreferredSize(new Dimension(1900, 50));
+        spacer.setPreferredSize(new Dimension(1900, 35));
         splashMasterPanel.add(libraryName);
         splashMasterPanel.add(spacer);
         libraryName.setFont(new Font("Courier", Font.BOLD, 25));
@@ -184,22 +189,26 @@ public class GUI implements ActionListener {
         splashSecondaryPanel.add(splashEmployees);
         splashSecondaryPanel.add(splashDatabases);
         splashSecondaryPanel.add(splashPassword);
+        splashSecondaryPanel.add(splashAccount);
         splashMasterPanel.add(splashSecondaryPanel);
 
         splashMedia.addActionListener(this);
         splashEmployees.addActionListener(this);
         splashDatabases.addActionListener(this);
         splashPassword.addActionListener(this);
+        splashAccount.addActionListener(this);
 
         Dimension buttonSize = new Dimension(250, 35);
         splashMedia.setPreferredSize(buttonSize);
         splashEmployees.setPreferredSize(buttonSize);
         splashDatabases.setPreferredSize(buttonSize);
         splashPassword.setPreferredSize(buttonSize);
+        splashAccount.setPreferredSize(buttonSize);
 
         splashEmployees.setVisible(false);
         splashPassword.setVisible(false);
         splashDatabases.setVisible(false);
+        splashAccount.setVisible(false);
     }
 
     private void buildSearch(){
@@ -892,8 +901,198 @@ public class GUI implements ActionListener {
         }
         dialog.setVisible(true);
         if(valid){
+            for(int i = 0; i != newPasswordFields.size(); i++) {
+                ((JTextField) newPasswordFields.get(i)).setText("");
+            }
             changeScreen(2);
         }
+    }
+
+    private void buildAccount(){
+        JPanel accountSecondaryPanel = new JPanel();
+
+        accountMasterPanel.setBackground(menuBlue);
+        accountSecondaryPanel.setBackground(menuBlue);
+
+        GridLayout layout = new GridLayout(30, 1);
+        accountSecondaryPanel.setLayout(layout);
+
+        JLabel title = new JLabel("Employee Account Creator");
+        title.setFont(new Font("Courier", Font.BOLD, 25));
+
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(exitActionListener(""));
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(accountActionListener());
+
+        JLabel nameLabel = new JLabel("Name");
+        nameLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField nameField = new JTextField();
+        nameField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel deptLabel = new JLabel("Department");
+        deptLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField deptField = new JTextField();
+        deptField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel bossLabel = new JLabel("Boss ID");
+        bossLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField bossField = new JTextField();
+        bossField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel projLabel = new JLabel("Project");
+        projLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField projField = new JTextField();
+        projField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel subjLabel = new JLabel("Subject");
+        subjLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField subjField = new JTextField();
+        subjField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel reqLabel = new JLabel("Requested Materials");
+        reqLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField reqField = new JTextField();
+        reqField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel allocLabel = new JLabel("Allocated Budget");
+        allocLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField allocField = new JTextField();
+        allocField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel amtLabel = new JLabel("Amount Spent");
+        amtLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField amtField = new JTextField();
+        amtField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel permLabel = new JLabel("Permission Level");
+        permLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JTextField permField = new JTextField();
+        permField.setPreferredSize(new Dimension(200, 20));
+
+        JLabel passLabel = new JLabel("Password");
+        passLabel.setFont(new Font("Courier", Font.BOLD, 15));
+        JPasswordField passField = new JPasswordField();
+        passField.setPreferredSize(new Dimension(200, 20));
+
+        accountSecondaryPanel.add(nameLabel);  // could have added this all to an arraylist but too late now
+        accountSecondaryPanel.add(nameField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(deptLabel);
+        accountSecondaryPanel.add(deptField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(bossLabel);
+        accountSecondaryPanel.add(bossField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(projLabel);
+        accountSecondaryPanel.add(projField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(subjLabel);
+        accountSecondaryPanel.add(subjField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(reqLabel);
+        accountSecondaryPanel.add(reqField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(allocLabel);
+        accountSecondaryPanel.add(allocField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(amtLabel);
+        accountSecondaryPanel.add(amtField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(permLabel);
+        accountSecondaryPanel.add(permField);
+        accountSecondaryPanel.add(new JLabel());
+        accountSecondaryPanel.add(passLabel);
+        accountSecondaryPanel.add(passField);
+
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(new Dimension(1920, 15));
+        JLabel spacer2 = new JLabel();
+        spacer2.setPreferredSize(new Dimension(1920, 0));
+
+        accountMasterPanel.add(title);
+        accountMasterPanel.add(exitButton);
+        accountMasterPanel.add(spacer);
+        accountMasterPanel.add(accountSecondaryPanel);
+        accountMasterPanel.add(spacer2);
+        accountMasterPanel.add(submitButton);
+
+        newAccountFields.add(nameField);
+        newAccountFields.add(deptField);
+        newAccountFields.add(bossField);
+        newAccountFields.add(projField);
+        newAccountFields.add(subjField);
+        newAccountFields.add(reqField);
+        newAccountFields.add(allocField);
+        newAccountFields.add(amtField);
+        newAccountFields.add(permField);
+        newAccountFields.add(passField);
+    }
+
+    private ActionListener accountActionListener(){
+        return e -> {
+            String name = ((JTextField) newAccountFields.get(0)).getText();
+            String department = ((JTextField) newAccountFields.get(1)).getText();
+            String bossID = ((JTextField) newAccountFields.get(2)).getText();
+            String project = ((JTextField) newAccountFields.get(3)).getText();
+            String subject = ((JTextField) newAccountFields.get(4)).getText();
+            String req = ((JTextField) newAccountFields.get(5)).getText();
+            String alloc = ((JTextField) newAccountFields.get(6)).getText();
+            String amt = ((JTextField) newAccountFields.get(7)).getText();
+            String perm = ((JTextField) newAccountFields.get(8)).getText();
+            String pass = String.valueOf((((JPasswordField) newAccountFields.get(9)).getPassword()));
+            if(!(name.isEmpty() || department.isEmpty() || bossID.isEmpty() || project.isEmpty() || subject.isEmpty() ||
+            req.isEmpty() || alloc.isEmpty() || amt.isEmpty() || perm.isEmpty() || pass.isEmpty())){
+                try {
+                    int test = Integer.parseInt(perm);
+                    if(test >= 1 && test <= 5) {
+                        int max = 0;
+                        for (var entry : read.employee.employeeT.entrySet()) {
+                            int current;
+                            try {
+                                current = Integer.parseInt(entry.getKey());
+                            } catch (NumberFormatException ex) {
+                                current = 0;
+                            }
+                            if (current > max) max = current;
+                        }
+                        read.employee.employeeT.put(String.valueOf(max + 1),
+                                new employeeData(name, department, bossID, project, subject, req,
+                                        alloc, perm, pass, "Yes", amt));
+
+                        JOptionPane optionPane = new JOptionPane("Successfully created employee", JOptionPane.INFORMATION_MESSAGE);
+                        JDialog dialog = optionPane.createDialog("Success");
+                        dialog.setVisible(true);
+                        for(int i = 0; i != newAccountFields.size(); i++){
+                            if(i!=9){
+                                ((JTextField) newAccountFields.get(i)).setText("");
+                            }
+                            else{
+                                ((JPasswordField) newAccountFields.get(i)).setText("");
+                            }
+                        }
+                        rebuild();
+                        changeScreen(2);
+                    }
+                    else{
+                        JOptionPane optionPane = new JOptionPane("Invalid permission level", JOptionPane.ERROR_MESSAGE);
+                        JDialog dialog = optionPane.createDialog("Perm level");
+                        dialog.setVisible(true);
+                    }
+                }
+                catch(NumberFormatException ex){
+                    JOptionPane optionPane = new JOptionPane("Invalid permission level", JOptionPane.ERROR_MESSAGE);
+                    JDialog dialog = optionPane.createDialog("Perm level");
+                    dialog.setVisible(true);
+                }
+            }
+            else{
+                JOptionPane optionPane = new JOptionPane("One or more fields is empty", JOptionPane.ERROR_MESSAGE);
+                JDialog dialog = optionPane.createDialog("Empty field");
+                dialog.setVisible(true);
+            }
+        };
     }
 
     private ActionListener exitActionListener(String db){
@@ -914,6 +1113,7 @@ public class GUI implements ActionListener {
             case 4 -> screenName = "media";
             case 5 -> screenName = "database";
             case 6 -> screenName = "password";
+            case 7 -> screenName = "account";
 
         }
         setScreenSize(screenName);
@@ -926,7 +1126,8 @@ public class GUI implements ActionListener {
                 "employee", new Dimension(1920, 1080),
                 "media", new Dimension(1500, 1000),
                 "database", new Dimension(1500, 1000),
-                "password", new Dimension(500, 500)));
+                "password", new Dimension(500, 500),
+                "account", new Dimension(500, 750)));
         frame.setSize(size.get(screen));
         frame.setLocationRelativeTo(null);
     }
@@ -939,6 +1140,7 @@ public class GUI implements ActionListener {
         mainMasterPanel.add(mediaMasterPanel, "media");
         mainMasterPanel.add(databaseScrollPane, "database");
         mainMasterPanel.add(passwordMasterPanel, "password");
+        mainMasterPanel.add(accountMasterPanel, "account");
         frame.add(mainMasterPanel);
         changeScreen(1);
     }
@@ -1032,6 +1234,10 @@ public class GUI implements ActionListener {
         else if (e.getSource() == splashPassword){
             frame.setTitle("Account Settings");
             changeScreen(6);
+        }
+        else if (e.getSource() == splashAccount){
+            frame.setTitle("Employee Creator");
+            changeScreen(7);
         }
         else if (e.getSource() == mediaOverdue){
             searchMedBox.setSelectedIndex(0);
