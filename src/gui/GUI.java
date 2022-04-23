@@ -16,7 +16,7 @@ public class GUI implements ActionListener {
 
     // objects used in all GUIs
     private final JFrame frame = new JFrame();
-    private final CardLayout cl = new CardLayout(0, 0);// objects used in MenuGUI
+    private final CardLayout cl = new CardLayout(0, 0);
     private final JPanel mainMasterPanel = new JPanel();
     private final JLabel libraryName = new JLabel("Stonybrook Library");
     private final Color menuBlue = new Color(173, 216, 230);
@@ -399,6 +399,32 @@ public class GUI implements ActionListener {
             }
             empButtons.add((ArrayList<JButton>) tempButtons.clone());
             tempButtons.clear();
+        }
+    }
+
+    private void filterBuilder(){
+        ArrayList<String> empAtt;
+
+        filterDepartment.clear();
+        filterBoss.clear();
+        filterProject.clear();
+        filterSubject.clear();
+
+        for (var entry : read.employee.employeeT.entrySet()) {
+            empAtt = entry.getValue().getData();
+
+            if (!filterDepartment.contains(empAtt.get(1))) {
+                filterDepartment.add(empAtt.get(1));
+            }
+            if (!filterBoss.contains(empAtt.get(2))) {
+                filterBoss.add(empAtt.get(2));
+            }
+            if (!filterProject.contains(empAtt.get(3))) {
+                filterProject.add(empAtt.get(3));
+            }
+            if (!filterSubject.contains(empAtt.get(4))) {
+                filterSubject.add(empAtt.get(4));
+            }
         }
     }
 
@@ -926,7 +952,7 @@ public class GUI implements ActionListener {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(accountActionListener());
 
-        String[] names = {"Names", "Department", "Boss ID", "Project", "Subject", "Requested Materials",
+        String[] names = {"Name", "Department", "Boss ID", "Project", "Subject", "Requested Materials",
         "Allocated Budget", "Amount Spent", "Permission", "Password"};
 
         ArrayList<Object> objects = new ArrayList<>();
@@ -1013,6 +1039,7 @@ public class GUI implements ActionListener {
                             }
                         }
                         rebuild();
+                        filterBuilder();
                         changeScreen(2);
                     }
                     else{
