@@ -1207,14 +1207,16 @@ public class GUI implements ActionListener {
             changeScreen(7);
         }
         else if (e.getSource() == mediaOverdue){
+            String text = mediaOverdue.getText();
+            String[] states = {"Overdue", "Revert"};
             searchMedBox.setSelectedIndex(0);
             clearMedia();
-            if(mediaOverdue.getText().equals("Overdue")) {
-                mediaOverdue.setText("Revert");
+            if(text.equals(states[0])) {
+                mediaOverdue.setText(states[1]);
                 filterOverdue();
             }
             else{
-                mediaOverdue.setText("Overdue");
+                mediaOverdue.setText(states[0]);
                 buildMediaButtons(read.Media.mediaT);
             }
         }
