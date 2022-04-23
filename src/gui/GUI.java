@@ -926,85 +926,35 @@ public class GUI implements ActionListener {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(accountActionListener());
 
-        JLabel nameLabel = new JLabel("Name");
-        nameLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(200, 20));
+        String[] names = {"Names", "Department", "Boss ID", "Project", "Subject", "Requested Materials",
+        "Allocated Budget", "Amount Spent", "Permission", "Password"};
 
-        JLabel deptLabel = new JLabel("Department");
-        deptLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField deptField = new JTextField();
-        deptField.setPreferredSize(new Dimension(200, 20));
+        ArrayList<Object> objects = new ArrayList<>();
+        for(int i = 0; i != names.length; i++){
+            JLabel label = new JLabel(names[i]);
+            label.setFont(new Font("Courier", Font.BOLD, 15));
+            objects.add(label);
+            if(i != 9) {
+                JTextField nameField = new JTextField();
+                nameField.setPreferredSize(new Dimension(200, 20));
+                objects.add(nameField);
+                newAccountFields.add(nameField);
+            }
+            else{
+                JPasswordField passField = new JPasswordField();
+                passField.setPreferredSize(new Dimension(200, 20));
+                objects.add(passField);
+                newAccountFields.add(passField);
+            }
+        }
 
-        JLabel bossLabel = new JLabel("Boss ID");
-        bossLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField bossField = new JTextField();
-        bossField.setPreferredSize(new Dimension(200, 20));
+        for(int i = 0; i != objects.size(); i ++){
+            accountSecondaryPanel.add((JLabel)objects.get(i));
+            i++;
+            accountSecondaryPanel.add((JTextField)objects.get(i));
+            accountSecondaryPanel.add(new JLabel());
+        }
 
-        JLabel projLabel = new JLabel("Project");
-        projLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField projField = new JTextField();
-        projField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel subjLabel = new JLabel("Subject");
-        subjLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField subjField = new JTextField();
-        subjField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel reqLabel = new JLabel("Requested Materials");
-        reqLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField reqField = new JTextField();
-        reqField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel allocLabel = new JLabel("Allocated Budget");
-        allocLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField allocField = new JTextField();
-        allocField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel amtLabel = new JLabel("Amount Spent");
-        amtLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField amtField = new JTextField();
-        amtField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel permLabel = new JLabel("Permission Level");
-        permLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JTextField permField = new JTextField();
-        permField.setPreferredSize(new Dimension(200, 20));
-
-        JLabel passLabel = new JLabel("Password");
-        passLabel.setFont(new Font("Courier", Font.BOLD, 15));
-        JPasswordField passField = new JPasswordField();
-        passField.setPreferredSize(new Dimension(200, 20));
-
-        accountSecondaryPanel.add(nameLabel);  // could have added this all to an arraylist but too late now
-        accountSecondaryPanel.add(nameField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(deptLabel);
-        accountSecondaryPanel.add(deptField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(bossLabel);
-        accountSecondaryPanel.add(bossField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(projLabel);
-        accountSecondaryPanel.add(projField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(subjLabel);
-        accountSecondaryPanel.add(subjField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(reqLabel);
-        accountSecondaryPanel.add(reqField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(allocLabel);
-        accountSecondaryPanel.add(allocField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(amtLabel);
-        accountSecondaryPanel.add(amtField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(permLabel);
-        accountSecondaryPanel.add(permField);
-        accountSecondaryPanel.add(new JLabel());
-        accountSecondaryPanel.add(passLabel);
-        accountSecondaryPanel.add(passField);
 
         JLabel spacer = new JLabel();
         spacer.setPreferredSize(new Dimension(1920, 15));
@@ -1018,16 +968,6 @@ public class GUI implements ActionListener {
         accountMasterPanel.add(spacer2);
         accountMasterPanel.add(submitButton);
 
-        newAccountFields.add(nameField);
-        newAccountFields.add(deptField);
-        newAccountFields.add(bossField);
-        newAccountFields.add(projField);
-        newAccountFields.add(subjField);
-        newAccountFields.add(reqField);
-        newAccountFields.add(allocField);
-        newAccountFields.add(amtField);
-        newAccountFields.add(permField);
-        newAccountFields.add(passField);
     }
 
     private ActionListener accountActionListener(){
