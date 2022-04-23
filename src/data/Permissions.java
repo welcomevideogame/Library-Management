@@ -3,6 +3,9 @@ package data;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Checks the permission levels of employees
+ */
 public class Permissions {
 
     public boolean Restricted(String permissionLVL) {

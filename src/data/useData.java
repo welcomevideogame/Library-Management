@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Class for the use of the databases
+ */
 public class useData {
 
     private final HashMap<String, Boolean> uses;
@@ -27,11 +30,18 @@ public class useData {
         this.empID = empID;
     }
 
+    /**
+     * Starts the timer for how long the employee accesses the database
+     */
     public void startTimer(){
         timer = System.currentTimeMillis();
     }
 
 
+    /**
+     * Ends the timer to record how long employee was using the database
+     * @param db Takes the database, so they can record what they were using
+     */
     public void endTimer(String db){
         if(!uses.get(db)) uses.put(db, true);
         long difference = System.currentTimeMillis() - timer;

@@ -12,6 +12,9 @@ import java.util.*;
 
 import data.*;
 
+/**
+ * Class for creating the GUI for the Stonybrook Library
+ */
 public class GUI implements ActionListener {
 
     // objects used in all GUIs
@@ -86,7 +89,11 @@ public class GUI implements ActionListener {
     private final int permissionIndex = 8;
     private final int employedIndex = 9;
 
-
+    /**
+     * Constructor for the GUI
+     * @param write The object for writing data back. Not really needed because write methods are static
+     * @param read The object that contains the read data information. Contains employee and media information
+     */
     public GUI(WriteData write, ReadFile read){
         this.write = write;
         this.read = read;
@@ -98,7 +105,8 @@ public class GUI implements ActionListener {
     }
 
     /**
-     * Sets settings for the frame and builds the menu, game, and results screen.
+     * Sets settings for the frame and builds the menu, game, and results screen
+     * Handles calling all the methods needed for building the entire GUI
      */
     private void buildGUI() {
         frame.setSize(new Dimension(500, 300));
@@ -123,6 +131,10 @@ public class GUI implements ActionListener {
         Collections.addAll(splashButtons, splashMedia, splashEmployees, splashDatabases, splashPassword, splashAccount);
     }
 
+    /**
+     * Method that gives the function when the JFrame is closed
+     * @return WindowAdapter with functionality
+     */
     private WindowAdapter onClose(){
         return new WindowAdapter() {
             @Override
@@ -134,6 +146,9 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Builds the login screen. Could use some optimization
+     */
     private void buildLogin() {
         loginMasterPanel.setBackground(menuBlue);
         loginMasterPanel.setLayout(new BoxLayout(loginMasterPanel, BoxLayout.PAGE_AXIS));
@@ -173,6 +188,10 @@ public class GUI implements ActionListener {
         loginQuit.addActionListener(this);
     }
 
+    /**
+     * Builds the splash screen
+     * Adds all the buttons that will be on the splash screen as well as add their ActionListeners
+     */
     private void buildSplash() {
         splashMasterPanel.setBackground(menuBlue);
         splashSecondaryPanel.setBackground(menuBlue);
@@ -211,6 +230,9 @@ public class GUI implements ActionListener {
         splashAccount.setVisible(false);
     }
 
+    /**
+     * Builds the top panel on the employee screen that has search boxes and filters
+     */
     private void buildSearch(){
         employeeSuperMasterPanel.add(searchMasterPanel);
         searchMasterPanel.setPreferredSize(new Dimension(1920, 100));
@@ -222,6 +244,11 @@ public class GUI implements ActionListener {
         searchMasterPanel.add(exitButton);
     }
 
+    /**
+     * Builds the employee screen
+     * Also adds to a list of filters that will be used in the search boxes
+     * Could be optimized better like the media panel
+     */
     private void buildEmployee() {
 
         int passwordIndex = 9;
@@ -287,6 +314,9 @@ public class GUI implements ActionListener {
         populateComboBox();
     }
 
+    /**
+     * Populates the ComboBoxes with data from the filter arraylist data
+     */
     private void populateComboBox(){
         String[] filters = {"Department", "Boss", "Project", "Subject"};
         search1Box.addItem("All");
@@ -301,6 +331,10 @@ public class GUI implements ActionListener {
         search2Box.setEnabled(false);
     }
 
+    /**
+     * Builds the ActionListeners for the first ComboBox
+     * @return Changes depending on what item is selected. Affects second ComboBox
+     */
     private ActionListener search1ActionListener(){
 
         return e -> {
@@ -344,6 +378,10 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Builds the ActionListeners for the second ComboBox
+     * @return Will rebuild the buttons with the selected ComboBox item
+     */
     private ActionListener search2ActionListener(){
         return e -> {
             String filter1 = String.valueOf(search1Box.getSelectedItem());
@@ -358,6 +396,9 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Rebuilds the employee screen with the entire employeeData HashTable
+     */
     private void rebuild(){
         int hGap = 25;
         int vGap = 25;
@@ -402,6 +443,9 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Method primarily used for the account creating process to add possible new departments
+     */
     private void filterBuilder(){
         ArrayList<String> empAtt;
 
@@ -428,6 +472,10 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Adds the employee headings to the employee screen
+     * Made into a method since it is used by multiple things
+     */
     private void addEmpHeadings(){
         Color headingColor = new Color(150,205,225);
         for(int i = 0; i != headings.length; i++){
@@ -437,6 +485,11 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Updates the employee screen with new buttons
+     * @param filter The selected item from the first ComboBox
+     * @param category The selected item from the second CombBox
+     */
     private void updateButtons(String filter, String category){
         int departmentIndex = 1;
         int bossIndex = 2;
@@ -512,6 +565,12 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Returns the ActionListeners for all the buttons on employee screen
+     * @param index The index for which button is going to be used
+     * @param key The key of the employee whose attributes will be edited
+     * @return The ActionListener with all the functionality
+     */
     private ActionListener superActionListener(int index, String key){
         if (index == permissionIndex){
             return e -> {
@@ -590,10 +649,19 @@ public class GUI implements ActionListener {
         return null;
     }
 
+    /**
+     * Method that compares current user's rank to another employee's
+     * @param key ID for the other employee
+     * @return true if they are outranked, otherwise will be false
+     */
     private boolean checkOutrank(String key){
         return(currentRank <= Integer.parseInt(read.employee.employeeT.get(key).getData().get(permissionIndex)));
     }
 
+    /**
+     * Toggles the user's employment
+     * @param key ID for the employee
+     */
     private void changeEmployment(String key){
         String newState = "";
         int empIndex = 10;
@@ -621,6 +689,12 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Changes the rank for the employee
+     * Makes sure that it is a valid move beforehand
+     * @param key ID for the employee
+     * @param newRank The new rank that the employee wil get
+     */
     private void changeRank(String key, int newRank){
         int permIndex = 9; // must make new one since arraylist is 9
         employeeData user = read.employee.employeeT.get(key);
@@ -639,6 +713,9 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Builds the media screen
+     */
     private void buildMedia(){
 
         JPanel mediaNorthPanel = new JPanel();
@@ -673,6 +750,9 @@ public class GUI implements ActionListener {
         buildMediaButtons(read.Media.mediaT);
     }
 
+    /**
+     * Populates the ComboBoxes with filter data
+     */
     private void populateMedCombo(){
         searchMedBox.addItem("All");
         for(int i = 0; i != filterVendor.size(); i++){
@@ -682,6 +762,10 @@ public class GUI implements ActionListener {
         searchMedBox.addActionListener(medComboAction());
     }
 
+    /**
+     * Gives ActionListener for the overdue button
+     * @return The ActionListener will toddle on and off depending on what state it is in
+     */
     private ActionListener medComboAction(){
         return e -> {
             if(mediaOverdue.getText().equals("Revert")) mediaOverdue.setText("Overdue");
@@ -698,6 +782,10 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Method for filtering by the vendor
+     * @param filter The vendor that will be filtered by
+     */
     private void filterVendor(String filter){
         int vendorIndex = 5;
         clearMedia();
@@ -710,6 +798,9 @@ public class GUI implements ActionListener {
         buildMediaButtons(filteredData);
     }
 
+    /**
+     * Populates the filterVendor data by unique vendor names
+     */
     private void getMediaFilter(){
         int vendorIndex = 5;
         for (var entry : read.Media.mediaT.entrySet()) {
@@ -718,6 +809,10 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Builds the buttons on the media screen
+     * @param ht Takes a HashTable of employeeData objects that can be filtered
+     */
     private void buildMediaButtons(Hashtable<String, mediaData> ht){
 
         int hGap = 25;
@@ -754,6 +849,11 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Checks if the book is overdue
+     * @param date Gets the due date for the object
+     * @return Boolean that will be true if it is overdue
+     */
     private boolean checkOverdue(String date){
         try {
             return LocalDate.parse(date).isBefore(LocalDate.now());
@@ -763,12 +863,19 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Clears the media button objects
+     */
     private void clearMedia(){
         mediaGridPanel.removeAll();
         mediaGridPanel.revalidate();
         mediaGridPanel.repaint();
     }
 
+    /**
+     * Filters the buttons by overdue
+     * Takes the data that is in the ComboBox
+     */
     private void filterOverdue(){
 
         int dateIndex = 4;
@@ -783,6 +890,10 @@ public class GUI implements ActionListener {
         buildMediaButtons(filteredMedia);
     }
 
+    /**
+     * Builds the database screen
+     * Optimized with heading array
+     */
     private void buildDatabase(){
 
         dbUsage = ReadFile.readUseData();
@@ -837,6 +948,10 @@ public class GUI implements ActionListener {
 
     }
 
+    /**
+     * Builds the password screen
+     * Could be optimized better
+     */
     private void buildPassword(){
         JPanel passwordFields = new JPanel();
         passwordFields.setBackground(menuBlue);
@@ -888,6 +1003,10 @@ public class GUI implements ActionListener {
         Collections.addAll(newPasswordFields, oldPassword, newPassword, conPassword);
     }
 
+    /**
+     * ActionListener for the JPasswordFields. Checks to see if any of them are empty
+     * @return Returns the anonymous function
+     */
     private ActionListener passwordActionListener(){
         return e -> {
             String oP = String.valueOf(newPasswordFields.get(0).getPassword());
@@ -904,6 +1023,12 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Method for checking for password validity
+     * @param oP Old password, current password of the use
+     * @param nP New password, gotten from the second JPasswordField
+     * @param cP Confirmation password, gotten from the third JPasswordField
+     */
     private void handlePassword(String oP, String nP, String cP){
         String currentPassword = read.employee.employeeT.get(String.valueOf(currentUser)).getPassword();
         JOptionPane optionPane;
@@ -934,6 +1059,9 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Builds the account screen
+     */
     private void buildAccount(){
         JPanel accountSecondaryPanel = new JPanel();
 
@@ -996,6 +1124,10 @@ public class GUI implements ActionListener {
 
     }
 
+    /**
+     * Method or handling the TextFields
+     * @return Gives anonymous function that gets all the fields from the account builder
+     */
     private ActionListener accountActionListener(){
         return e -> {
             String name = ((JTextField) newAccountFields.get(0)).getText();
@@ -1062,6 +1194,12 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * ActionListener for the exit buttons on all the screens
+     * Returns to the splash screen
+     * @param db The current page that they are on. Keep blank if non-database page
+     * @return Anonymous function
+     */
     private ActionListener exitActionListener(String db){
         return e -> {
             changeScreen(2);
@@ -1071,6 +1209,10 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Changes the screen to something else and with the screen size method
+     * @param screen The current number of screen. Goes through switch statement
+     */
     private void changeScreen(int screen) {
         String screenName = "";
         switch (screen) {
@@ -1087,6 +1229,10 @@ public class GUI implements ActionListener {
         cl.show(mainMasterPanel, screenName);
     }
 
+    /**
+     * Has a HashMap of dimensions for screen sizes
+     * @param screen The string of the name for the screen
+     */
     private void setScreenSize(String screen){
         HashMap<String, Dimension> size = new HashMap<>(Map.of("login", new Dimension(500, 300),
                 "splash", new Dimension(500, 450),
@@ -1099,6 +1245,10 @@ public class GUI implements ActionListener {
         frame.setLocationRelativeTo(null);
     }
 
+    /**
+     * Builds the main panel for the screen
+     * Adds all the individual screens to the main master panel for the card layout
+     */
     private void buildMainPanel() {
         mainMasterPanel.setLayout(cl);
         mainMasterPanel.add(loginMasterPanel, "login");
@@ -1112,6 +1262,10 @@ public class GUI implements ActionListener {
         changeScreen(1);
     }
 
+    /**
+     * Method for logging in
+     * Checks to see if the login is valid
+     */
     private void logIn(){
         boolean valid = false;
         boolean empty = false;
@@ -1151,6 +1305,9 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Sets the active buttons depending on what the permission level of the current user is
+     */
     private void setButtons(){
         ArrayList<Integer> index = new ArrayList<>();
 
@@ -1172,6 +1329,10 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * Main actionPerformed method for all the main buttons
+     * @param e The event
+     */
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == loginSubmit){
             logIn();

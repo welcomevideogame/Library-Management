@@ -4,18 +4,20 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Class that contains the HashTable of employee objects
+ * key = empID
+ * 0   = name
+ * 1   = department
+ * 2   = boss
+ * 3   = project
+ * 4   = subject
+ * 5   = requestedMaterials
+ * 6   = allocatedBudget
+ * 7   = permissionLevel
+ * 8   = password
+ */
 public class  Employee {
-
-    // key = empID
-    // 0   = name
-    // 1   = department
-    // 2   = boss
-    // 3   = project
-    // 4   = subject
-    // 5   = requestedMaterials
-    // 6   = allocatedBudget
-    // 7   = permissionLevel
-    // 8   = password
 
     public Hashtable<String, employeeData> employeeT = new Hashtable<String, employeeData>();
     Permissions accessCheck = new Permissions();

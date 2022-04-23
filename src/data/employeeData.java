@@ -3,6 +3,9 @@ package data;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Object that contains all the data for the employee
+ */
 public class employeeData {
 
     String name;
@@ -32,6 +35,9 @@ public class employeeData {
 
     }
 
+    /**
+     * @return an ArrayList of all the attributes for the dat aof the employee
+     */
     public ArrayList<String> getData(){
         ArrayList<String> a = new ArrayList<>();
         Collections.addAll(a, name, department, bossID, project, subject, requestedMaterials, allocatedBudget, amountSpent,
@@ -59,6 +65,9 @@ public class employeeData {
         employed = state;
     }
 
+    /**
+     * Issue with reading the allocatedBudget and amountSpent so this fixes that
+     */
     public void flipBudgets(){
         String a = String.valueOf(allocatedBudget);
         String b = String.valueOf(amountSpent);

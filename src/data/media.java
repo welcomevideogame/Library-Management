@@ -5,6 +5,9 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Date;
 
+/**
+ * Object that contains a Hashtable for the mediaData object
+ */
 public class media {
     public Hashtable<String, mediaData> mediaT = new Hashtable();
     String mediaID;

@@ -5,12 +5,18 @@ import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
+/**
+ * Class for reading all the data
+ */
 public class ReadFile {
     public media Media = new media();
     public Employee employee = new Employee();
 
     //public ReadFile(Employee employee){}
 
+    /**
+     * Reads the data for media text file
+     */
     public void readMediaFile() {
         try {
             File myObj = new File("Media.txt");
@@ -33,6 +39,9 @@ public class ReadFile {
         }
     }
 
+    /**
+     * Reads the  data for the employee text file
+     */
     public void readEmployeeFile() {
         try {
             int linesFound = 0;
@@ -81,6 +90,10 @@ public class ReadFile {
 
     }
 
+    /**
+     * Static method for useData text file
+     * @return an ArrayList of useData objects
+     */
     public static ArrayList<ArrayList<String>> readUseData(){
 
         ArrayList<ArrayList<String>> attributes = new ArrayList<>();

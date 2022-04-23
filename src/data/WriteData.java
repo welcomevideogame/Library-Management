@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * Class for saving all the data into their respective text files
+ * All methods are static because no object needed
+ */
 public class WriteData {
 
     public static void writeEmp(Hashtable<String, employeeData> e){
